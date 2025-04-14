@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { getToken } from '../../utils/auth';
 import { Link } from 'react-router-dom';
+import apiService from '../../utils/api';
 
 const Profile = ({ user, setUser }) => {
   const [loading, setLoading] = useState(true);
@@ -32,29 +31,22 @@ const Profile = ({ user, setUser }) => {
       
       fetchUserData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   
   const fetchUserData = async () => {
     setLoading(true);
     try {
-      const token = getToken();
-      
       // Fetch user's services
-      const servicesResponse = await axios.get('http://localhost:8000/api/services/my_services/', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const servicesResponse = await apiService.getUserServices();
       setServices(servicesResponse.data);
       
       // Fetch user's projects
-      const projectsResponse = await axios.get('http://localhost:8000/api/projects/my_projects/', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const projectsResponse = await apiService.getUserProjects();
       setProjects(projectsResponse.data);
       
       // Fetch reviews about the user
-      const reviewsResponse = await axios.get(`http://localhost:8000/api/reviews/for_user/?user_id=${user.id}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const reviewsResponse = await apiService.getUserReviews(user.id);
       setReviews(reviewsResponse.data);
       
     } catch (error) {
@@ -77,12 +69,8 @@ const Profile = ({ user, setUser }) => {
     setErrors({});
     
     try {
-      const token = getToken();
-      const response = await axios.put(
-        'http://localhost:8000/api/profiles/update_me/',
-        formData,
-        { headers: { 'Authorization': `Bearer ${token}` } }
-      );
+      // Use apiService to update profile
+      const response = await apiService.updateProfile(formData);
       
       // Update the user in parent component
       setUser({
