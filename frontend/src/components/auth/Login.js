@@ -26,30 +26,44 @@ const Login = ({ setUser }) => {
     setLoading(true);
     
     try {
+      console.log('Attempting login with:', { ...formData, password: '****' });
+      
       // Use the apiService to login
       const response = await apiService.login(formData);
+      console.log('Login response:', response);
       
       // Store tokens in local storage
       setTokens(response.data);
+      console.log('Tokens stored, fetching profile...');
       
-      // Fetch user data
-      const userResponse = await apiService.getProfile();
-      
-      // Set user in parent component
-      setUser(userResponse.data);
-      
-      // Redirect to homepage
-      navigate('/');
+      try {
+        // Fetch user data
+        const userResponse = await apiService.getProfile();
+        console.log('User profile response:', userResponse);
+        
+        // Set user in parent component
+        setUser(userResponse.data);
+        
+        // Redirect to homepage
+        navigate('/');
+      } catch (profileErr) {
+        console.error('Profile fetch error:', profileErr);
+        setError('Successfully logged in but failed to fetch your profile. Please refresh the page.');
+        // Still navigate to homepage since login was successful
+        navigate('/');
+      }
       
     } catch (err) {
       console.error('Login error:', err);
       if (err.response && err.response.data) {
+        console.log('Error response data:', err.response.data);
         if (err.response.data.detail) {
           setError(err.response.data.detail);
         } else {
           setError('Invalid username or password. Please try again.');
         }
       } else {
+        console.log('Unknown error type:', err);
         setError('An error occurred during login. Please try again.');
       }
     } finally {
