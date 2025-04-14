@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { setTokens } from '../../utils/auth';
+import apiService from '../../utils/api';
 
 const Register = ({ setUser }) => {
   const [formData, setFormData] = useState({
@@ -35,7 +35,8 @@ const Register = ({ setUser }) => {
     setLoading(true);
     
     try {
-      const response = await axios.post('http://localhost:8000/api/register/', formData);
+      // Use apiService to register
+      const response = await apiService.register(formData);
       
       // Store tokens in local storage
       setTokens(response.data);

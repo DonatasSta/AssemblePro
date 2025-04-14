@@ -49,7 +49,8 @@ export const getUser = async () => {
   
   try {
     const token = getToken();
-    const response = await fetch('http://localhost:8000/api/profiles/me/', {
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+    const response = await fetch(`${apiUrl}/profiles/me/`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

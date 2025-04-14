@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { setTokens } from '../../utils/auth';
+import apiService from '../../utils/api';
 
 const Login = ({ setUser }) => {
   const [formData, setFormData] = useState({
@@ -26,17 +26,14 @@ const Login = ({ setUser }) => {
     setLoading(true);
     
     try {
-      const response = await axios.post('http://localhost:8000/api/token/', formData);
+      // Use the apiService to login
+      const response = await apiService.login(formData);
       
       // Store tokens in local storage
       setTokens(response.data);
       
       // Fetch user data
-      const userResponse = await axios.get('http://localhost:8000/api/profiles/me/', {
-        headers: {
-          'Authorization': `Bearer ${response.data.access}`
-        }
-      });
+      const userResponse = await apiService.getProfile();
       
       // Set user in parent component
       setUser(userResponse.data);

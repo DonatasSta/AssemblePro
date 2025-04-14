@@ -3,7 +3,7 @@ import { getToken, logout } from './auth';
 
 // Create an axios instance with base URL
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api'
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api'
 });
 
 // Add a request interceptor to add the auth token to requests
