@@ -1,7 +1,7 @@
 // Token storage keys
-const ACCESS_TOKEN_KEY = 'assembleally_access_token';
-const REFRESH_TOKEN_KEY = 'assembleally_refresh_token';
-const USER_KEY = 'assembleally_user';
+const ACCESS_TOKEN_KEY = 'furnitureheroes_access_token';
+const REFRESH_TOKEN_KEY = 'furnitureheroes_refresh_token';
+const USER_KEY = 'furnitureheroes_user';
 
 // Function to store tokens in localStorage
 export const setTokens = (tokenData) => {

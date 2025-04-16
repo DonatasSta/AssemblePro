@@ -96,7 +96,7 @@ const Login = ({ setUser }) => {
             console.error('API service profile fetch failed, trying direct fetch:', profileApiError);
             
             // Fallback to direct fetch
-            const token = localStorage.getItem('assembleally_access_token');
+            const token = localStorage.getItem('furnitureheroes_access_token');
             userData = await directFetch('/profiles/me/', {
               headers: {
                 'Authorization': `Bearer ${token}`
