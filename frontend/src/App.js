@@ -22,13 +22,18 @@ function App() {
 
   useEffect(() => {
     const checkUser = async () => {
+      console.log('Checking if user is authenticated:', isAuthenticated());
       if (isAuthenticated()) {
         try {
+          console.log('Getting user data...');
           const userData = await getUser();
+          console.log('User data received:', userData);
           setUser(userData);
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
+      } else {
+        console.log('User not authenticated');
       }
       setLoading(false);
     };

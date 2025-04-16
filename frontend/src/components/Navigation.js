@@ -65,7 +65,7 @@ const Navigation = ({ user, setUser }) => {
                         <i className="bi bi-person me-2"></i>My Profile
                       </Link>
                     </li>
-                    {user.profile?.is_assembler && (
+                    {user.is_assembler && (
                       <li>
                         <Link className="dropdown-item" to="/services/create">
                           <i className="bi bi-plus-circle me-2"></i>Create Service

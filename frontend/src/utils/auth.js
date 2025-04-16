@@ -55,12 +55,24 @@ export const logout = () => {
 // Function to get the current user from API
 export const getUser = async () => {
   if (!isAuthenticated()) {
+    console.log('getUser: Not authenticated');
     return null;
   }
   
   try {
     const token = getToken();
+    console.log('getUser: Token exists:', !!token);
+    
+    // First try to get from localStorage if available
+    const cachedUser = getStoredUser();
+    if (cachedUser) {
+      console.log('getUser: Returning cached user');
+      return cachedUser;
+    }
+    
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+    console.log('getUser: Fetching from API', `${apiUrl}/profiles/me/`);
+    
     const response = await fetch(`${apiUrl}/profiles/me/`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -68,10 +80,12 @@ export const getUser = async () => {
     });
     
     if (!response.ok) {
+      console.error('getUser: Response not OK', response.status);
       throw new Error('Failed to fetch user data');
     }
     
     const userData = await response.json();
+    console.log('getUser: User data received', userData);
     localStorage.setItem(USER_KEY, JSON.stringify(userData));
     return userData;
   } catch (error) {
