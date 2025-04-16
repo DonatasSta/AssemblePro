@@ -38,12 +38,18 @@ api.interceptors.response.use(
 // Api methods for each endpoint
 const apiService = {
   // Auth
-  login: credentials => api.post('/token/', credentials),
+  login: credentials => {
+    console.log('Login API call with:', { ...credentials, password: '****' });
+    return api.post('/token/', credentials);
+  },
   register: userData => api.post('/register/', userData),
   refreshToken: refreshToken => api.post('/token/refresh/', { refresh: refreshToken }),
   
   // User profile
-  getProfile: () => api.get('/profiles/me/'),
+  getProfile: () => {
+    console.log('Getting profile, token exists:', !!getToken());
+    return api.get('/profiles/me/');
+  },
   updateProfile: profileData => api.put('/profiles/update_me/', profileData),
   
   // Services

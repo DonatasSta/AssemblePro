@@ -32,26 +32,36 @@ const Login = ({ setUser }) => {
       const response = await apiService.login(formData);
       console.log('Login response:', response);
       
+      // Check if we have the tokens
+      if (!response.data || !response.data.access) {
+        throw new Error('No access token received from server');
+      }
+      
       // Store tokens in local storage
       setTokens(response.data);
       console.log('Tokens stored, fetching profile...');
       
-      try {
-        // Fetch user data
-        const userResponse = await apiService.getProfile();
-        console.log('User profile response:', userResponse);
-        
-        // Set user in parent component
-        setUser(userResponse.data);
-        
-        // Redirect to homepage
-        navigate('/');
-      } catch (profileErr) {
-        console.error('Profile fetch error:', profileErr);
-        setError('Successfully logged in but failed to fetch your profile. Please refresh the page.');
-        // Still navigate to homepage since login was successful
-        navigate('/');
-      }
+      // Add a small delay to ensure token is stored
+      setTimeout(async () => {
+        try {
+          // Fetch user data
+          const userResponse = await apiService.getProfile();
+          console.log('User profile response:', userResponse);
+          
+          // Set user in parent component
+          setUser(userResponse.data);
+          
+          // Redirect to homepage
+          navigate('/');
+        } catch (profileErr) {
+          console.error('Profile fetch error:', profileErr);
+          setError('Successfully logged in but failed to fetch your profile. Please refresh the page.');
+          // Still navigate to homepage since login was successful
+          navigate('/');
+        } finally {
+          setLoading(false);
+        }
+      }, 500);
       
     } catch (err) {
       console.error('Login error:', err);
@@ -66,7 +76,6 @@ const Login = ({ setUser }) => {
         console.log('Unknown error type:', err);
         setError('An error occurred during login. Please try again.');
       }
-    } finally {
       setLoading(false);
     }
   };

@@ -4,13 +4,24 @@ const REFRESH_TOKEN_KEY = 'assembleally_refresh_token';
 const USER_KEY = 'assembleally_user';
 
 // Function to store tokens in localStorage
-export const setTokens = ({ access, refresh, user }) => {
-  localStorage.setItem(ACCESS_TOKEN_KEY, access);
-  localStorage.setItem(REFRESH_TOKEN_KEY, refresh);
-  
-  if (user) {
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+export const setTokens = (tokenData) => {
+  if (tokenData.access) {
+    localStorage.setItem(ACCESS_TOKEN_KEY, tokenData.access);
   }
+  
+  if (tokenData.refresh) {
+    localStorage.setItem(REFRESH_TOKEN_KEY, tokenData.refresh);
+  }
+  
+  if (tokenData.user) {
+    localStorage.setItem(USER_KEY, JSON.stringify(tokenData.user));
+  }
+  
+  console.log('Tokens stored successfully:', { 
+    access: !!tokenData.access, 
+    refresh: !!tokenData.refresh,
+    user: !!tokenData.user
+  });
 };
 
 // Function to get the access token
