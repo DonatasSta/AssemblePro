@@ -20,6 +20,29 @@ const Login = ({ setUser }) => {
     });
   };
 
+  // Fallback direct fetch function in case axios has issues
+  const directFetch = async (url, options = {}) => {
+    const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+    const fullUrl = `${baseURL}${url}`;
+    console.log('Direct fetch to:', fullUrl);
+    
+    const response = await fetch(fullUrl, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+      }
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Direct fetch error:', response.status, errorText);
+      throw new Error(`HTTP error ${response.status}: ${errorText}`);
+    }
+    
+    return await response.json();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -28,28 +51,62 @@ const Login = ({ setUser }) => {
     try {
       console.log('Attempting login with:', { ...formData, password: '****' });
       
-      // Use the apiService to login
-      const response = await apiService.login(formData);
-      console.log('Login response:', response);
+      let tokenData;
+      
+      try {
+        // First try using the API service
+        console.log('Trying login via apiService...');
+        const response = await apiService.login(formData);
+        console.log('Login response via apiService:', response);
+        tokenData = response.data;
+      } catch (apiError) {
+        console.error('API service login failed, trying direct fetch:', apiError);
+        
+        // Fallback to direct fetch if apiService fails
+        const directResponse = await directFetch('/token/', {
+          method: 'POST',
+          body: JSON.stringify(formData)
+        });
+        
+        console.log('Login response via direct fetch:', directResponse);
+        tokenData = directResponse;
+      }
       
       // Check if we have the tokens
-      if (!response.data || !response.data.access) {
+      if (!tokenData || !tokenData.access) {
         throw new Error('No access token received from server');
       }
       
       // Store tokens in local storage
-      setTokens(response.data);
+      setTokens(tokenData);
       console.log('Tokens stored, fetching profile...');
       
       // Add a small delay to ensure token is stored
       setTimeout(async () => {
         try {
           // Fetch user data
-          const userResponse = await apiService.getProfile();
-          console.log('User profile response:', userResponse);
+          let userData;
+          
+          try {
+            // Try using API service first
+            const userResponse = await apiService.getProfile();
+            console.log('User profile response via apiService:', userResponse);
+            userData = userResponse.data;
+          } catch (profileApiError) {
+            console.error('API service profile fetch failed, trying direct fetch:', profileApiError);
+            
+            // Fallback to direct fetch
+            const token = localStorage.getItem('assembleally_access_token');
+            userData = await directFetch('/profiles/me/', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            console.log('User profile response via direct fetch:', userData);
+          }
           
           // Set user in parent component
-          setUser(userResponse.data);
+          setUser(userData);
           
           // Redirect to homepage
           navigate('/');
@@ -65,17 +122,39 @@ const Login = ({ setUser }) => {
       
     } catch (err) {
       console.error('Login error:', err);
-      if (err.response && err.response.data) {
-        console.log('Error response data:', err.response.data);
-        if (err.response.data.detail) {
+      
+      // Log detailed error information
+      console.log('Error type:', typeof err);
+      console.log('Error message:', err.message);
+      console.log('Error name:', err.name);
+      console.log('Error stack:', err.stack);
+      
+      if (err.response) {
+        console.log('Error response:', err.response);
+        console.log('Response status:', err.response.status);
+        console.log('Response headers:', err.response.headers);
+        console.log('Response data:', err.response.data);
+        
+        if (err.response.data && err.response.data.detail) {
           setError(err.response.data.detail);
+        } else if (err.response.data) {
+          // Check for specific error fields in the response
+          const errorMessage = Object.entries(err.response.data)
+            .map(([key, value]) => `${key}: ${value}`)
+            .join(', ');
+          setError(errorMessage || 'Invalid username or password. Please try again.');
         } else {
-          setError('Invalid username or password. Please try again.');
+          setError(`Server error (${err.response.status}). Please try again.`);
         }
+      } else if (err.request) {
+        // Request was made but no response received
+        console.log('Error request (no response):', err.request);
+        setError('No response from server. Please check your connection and try again.');
       } else {
-        console.log('Unknown error type:', err);
-        setError('An error occurred during login. Please try again.');
+        console.log('Unknown error:', err);
+        setError(`Error: ${err.message || 'An unknown error occurred during login'}`);
       }
+      
       setLoading(false);
     }
   };
