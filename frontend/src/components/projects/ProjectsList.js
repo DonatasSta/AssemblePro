@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import apiService from '../../utils/api';
 
 const ProjectsList = () => {
   const [projects, setProjects] = useState([]);
@@ -24,13 +24,15 @@ const ProjectsList = () => {
     setError(null);
     
     try {
-      let url = `http://localhost:8000/api/projects/?ordering=${sortBy}`;
+      const params = {
+        ordering: sortBy
+      };
       
       if (status) {
-        url += `&status=${status}`;
+        params.status = status;
       }
       
-      const response = await axios.get(url);
+      const response = await apiService.getProjects(params);
       setProjects(response.data);
     } catch (err) {
       console.error('Error fetching projects:', err);
@@ -43,32 +45,34 @@ const ProjectsList = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     
-    let url = `http://localhost:8000/api/projects/?ordering=${sortBy}`;
+    const params = {
+      ordering: sortBy
+    };
     
     if (status) {
-      url += `&status=${status}`;
+      params.status = status;
     }
     
     if (searchTerm) {
-      url += `&search=${searchTerm}`;
+      params.search = searchTerm;
     }
     
     if (furnitureType) {
-      url += `&furniture_type=${furnitureType}`;
+      params.furniture_type = furnitureType;
     }
     
     if (minBudget) {
-      url += `&budget__gte=${minBudget}`;
+      params.budget__gte = minBudget;
     }
     
     if (maxBudget) {
-      url += `&budget__lte=${maxBudget}`;
+      params.budget__lte = maxBudget;
     }
     
     setLoading(true);
     setError(null);
     
-    axios.get(url)
+    apiService.getProjects(params)
       .then(response => {
         setProjects(response.data);
         setLoading(false);

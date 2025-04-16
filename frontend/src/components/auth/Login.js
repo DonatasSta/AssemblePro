@@ -167,7 +167,7 @@ const Login = ({ setUser }) => {
             <div className="card-body p-4">
               <div className="text-center mb-4">
                 <i className="bi bi-person-circle text-primary" style={{ fontSize: '3rem' }}></i>
-                <h3 className="mt-2">Login to Assembleally</h3>
+                <h3 className="mt-2">Login to FurnitureHeroes</h3>
                 <p className="text-muted">Enter your credentials to access your account</p>
               </div>
               

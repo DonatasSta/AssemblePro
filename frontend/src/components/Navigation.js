@@ -16,7 +16,7 @@ const Navigation = ({ user, setUser }) => {
       <div className="container">
         <Link className="navbar-brand d-flex align-items-center" to="/">
           <i className="bi bi-tools me-2"></i>
-          <span className="fw-bold">Assembleally</span>
+          <span className="fw-bold">FurnitureHeroes</span>
         </Link>
         
         <button 
