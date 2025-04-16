@@ -138,7 +138,7 @@ const Home = () => {
                     Expert with all IKEA products with 5+ years experience. Fast and reliable service.
                   </p>
                   <div className="d-flex justify-content-between align-items-center mt-3">
-                    <span className="fs-5 fw-semibold text-primary">$35/hour</span>
+                    <span className="fs-5 fw-semibold text-primary">£30/hour</span>
                     <Link to="/services" className="btn btn-outline-primary rounded-pill px-3">View More</Link>
                   </div>
                 </div>
@@ -162,7 +162,7 @@ const Home = () => {
                     Specialized in complex furniture. Will handle the toughest assembly challenges.
                   </p>
                   <div className="d-flex justify-content-between align-items-center mt-3">
-                    <span className="fs-5 fw-semibold text-primary">$45/hour</span>
+                    <span className="fs-5 fw-semibold text-primary">£40/hour</span>
                     <Link to="/services" className="btn btn-outline-primary rounded-pill px-3">View More</Link>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ const Home = () => {
                     Quick and efficient service for those who need their furniture assembled ASAP.
                   </p>
                   <div className="d-flex justify-content-between align-items-center mt-3">
-                    <span className="fs-5 fw-semibold text-primary">$40/hour</span>
+                    <span className="fs-5 fw-semibold text-primary">£35/hour</span>
                     <Link to="/services" className="btn btn-outline-primary rounded-pill px-3">View More</Link>
                   </div>
                 </div>
@@ -212,11 +212,11 @@ const Home = () => {
                 <div className="card-body p-4">
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <h5 className="card-title mb-0 fs-4 fw-semibold">Wardrobe Assembly</h5>
-                    <span className="badge bg-primary rounded-pill px-3 py-2">$150</span>
+                    <span className="badge bg-primary rounded-pill px-3 py-2">£120</span>
                   </div>
                   <div className="d-flex align-items-center mb-3">
                     <i className="bi bi-geo-alt text-secondary me-2"></i>
-                    <span className="text-secondary">New York, NY</span>
+                    <span className="text-secondary">London, UK</span>
                   </div>
                   <p className="card-text mb-3">
                     IKEA PAX wardrobe with sliding doors. All materials available, need assembly this weekend.
@@ -237,11 +237,11 @@ const Home = () => {
                 <div className="card-body p-4">
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <h5 className="card-title mb-0 fs-4 fw-semibold">Office Setup</h5>
-                    <span className="badge bg-primary rounded-pill px-3 py-2">$75</span>
+                    <span className="badge bg-primary rounded-pill px-3 py-2">£60</span>
                   </div>
                   <div className="d-flex align-items-center mb-3">
                     <i className="bi bi-geo-alt text-secondary me-2"></i>
-                    <span className="text-secondary">Chicago, IL</span>
+                    <span className="text-secondary">Manchester, UK</span>
                   </div>
                   <p className="card-text mb-3">
                     Standing desk and ergonomic chair setup needed. All tools should be provided.
@@ -262,11 +262,11 @@ const Home = () => {
                 <div className="card-body p-4">
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <h5 className="card-title mb-0 fs-4 fw-semibold">Bookshelves Installation</h5>
-                    <span className="badge bg-primary rounded-pill px-3 py-2">$120</span>
+                    <span className="badge bg-primary rounded-pill px-3 py-2">£90</span>
                   </div>
                   <div className="d-flex align-items-center mb-3">
                     <i className="bi bi-geo-alt text-secondary me-2"></i>
-                    <span className="text-secondary">Austin, TX</span>
+                    <span className="text-secondary">Birmingham, UK</span>
                   </div>
                   <p className="card-text mb-3">
                     Need help installing three large BILLY bookshelves and securing them to the wall.
