@@ -1,25 +1,79 @@
-/* Custom Styles for FurnitureHeroes */
+/* Custom Styles for FurnitureHeroes - Airbnb Inspired */
 
-/* Hero section */
-.hero-section {
-  padding: 5rem 0;
-  background: linear-gradient(135deg, #0d6efd 0%, #084298 100%);
+/* Global Airbnb-like styles */
+:root {
+  --primary: #ff385c;
+  --primary-dark: #e31c5f;
+  --secondary: #717171;
+  --dark: #222222;
+  --light: #f7f7f7;
+  --border: #dddddd;
+  --success: #008a05;
+  --border-radius: 12px;
+  --shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Feature cards */
-.feature-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+body {
+  font-family: 'Circular', -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;
+  color: var(--dark);
+  line-height: 1.5;
 }
 
-.feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+.py-6 {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
 }
 
-/* Price badges */
+.pb-7 {
+  padding-bottom: 5rem;
+}
+
+.mt-6 {
+  margin-top: 4rem;
+}
+
+/* Rounded elements like Airbnb */
+.rounded-4 {
+  border-radius: var(--border-radius);
+}
+
+/* Cards with subtle shadows */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Button styling */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.btn-outline-primary {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* Badges */
 .badge-lg {
   font-size: 1rem;
   padding: 0.5rem 0.8rem;
+  border-radius: 30px;
 }
 
 /* User avatars */
@@ -27,10 +81,11 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #e9ecef;
+  background-color: var(--light);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .avatar-lg {
