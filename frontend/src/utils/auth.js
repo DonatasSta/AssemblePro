@@ -70,7 +70,7 @@ export const getUser = async () => {
       return cachedUser;
     }
     
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+    const apiUrl = process.env.REACT_APP_API_URL || '/api';
     console.log('getUser: Fetching from API', `${apiUrl}/profiles/me/`);
     
     const response = await fetch(`${apiUrl}/profiles/me/`, {
