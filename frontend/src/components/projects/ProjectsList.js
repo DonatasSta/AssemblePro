@@ -146,7 +146,7 @@ const ProjectsList = () => {
                 </div>
                 
                 <div className="mb-3">
-                  <label className="form-label">Budget Range ($)</label>
+                  <label className="form-label">Budget Range (£)</label>
                   <div className="row g-2">
                     <div className="col-6">
                       <input
@@ -297,7 +297,7 @@ const ProjectsList = () => {
                           </small>
                         </div>
                         <div className="text-primary fw-bold">
-                          ${project.budget}
+                          £{project.budget}
                         </div>
                       </div>
                     </Link>

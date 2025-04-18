@@ -24,7 +24,8 @@ const ServicesList = () => {
     setError(null);
     
     try {
-      let url = `http://localhost:8000/api/services/?ordering=${sortBy}`;
+      // Using relative URL for API
+      let url = `/api/services/?ordering=${sortBy}`;
       
       if (availableOnly) {
         url += '&is_available=true';
@@ -43,7 +44,8 @@ const ServicesList = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     
-    let url = `http://localhost:8000/api/services/?ordering=${sortBy}`;
+    // Using relative URL for API
+    let url = `/api/services/?ordering=${sortBy}`;
     
     if (availableOnly) {
       url += '&is_available=true';
@@ -130,7 +132,7 @@ const ServicesList = () => {
                 </div>
                 
                 <div className="mb-3">
-                  <label className="form-label">Hourly Rate ($)</label>
+                  <label className="form-label">Hourly Rate (£)</label>
                   <div className="row g-2">
                     <div className="col-6">
                       <input
@@ -255,7 +257,7 @@ const ServicesList = () => {
                       <div className="card-body">
                         <div className="d-flex justify-content-between align-items-start mb-2">
                           <h3 className="card-title h5">{service.title}</h3>
-                          <span className="badge bg-success">${service.hourly_rate}/hour</span>
+                          <span className="badge bg-success">£{service.hourly_rate}/hour</span>
                         </div>
                         
                         <p className="card-text text-muted mb-3">{service.description}</p>
