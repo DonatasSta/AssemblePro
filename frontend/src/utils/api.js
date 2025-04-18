@@ -6,8 +6,8 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || '/api',
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
+    Accept: 'application/json',
+  },
 });
 
 // Log configuration
@@ -51,14 +51,14 @@ const apiService = {
   },
   register: userData => api.post('/register/', userData),
   refreshToken: refreshToken => api.post('/token/refresh/', { refresh: refreshToken }),
-  
+
   // User profile
   getProfile: () => {
     console.log('Getting profile, token exists:', !!getToken());
     return api.get('/profiles/me/');
   },
   updateProfile: profileData => api.put('/profiles/update_me/', profileData),
-  
+
   // Services
   getServices: params => api.get('/services/', { params }),
   getService: id => api.get(`/services/${id}/`),
@@ -66,7 +66,7 @@ const apiService = {
   updateService: (id, serviceData) => api.put(`/services/${id}/`, serviceData),
   deleteService: id => api.delete(`/services/${id}/`),
   getUserServices: () => api.get('/services/my_services/'),
-  
+
   // Projects
   getProjects: params => api.get('/projects/', { params }),
   getProject: id => api.get(`/projects/${id}/`),
@@ -77,15 +77,15 @@ const apiService = {
   getAssignedProjects: () => api.get('/projects/assigned_to_me/'),
   assignProject: (id, userId) => api.patch(`/projects/${id}/assign/`, { assigned_to: userId }),
   updateProjectStatus: (id, status) => api.patch(`/projects/${id}/update_status/`, { status }),
-  
+
   // Messages
   getConversations: () => api.get('/messages/conversations/'),
   getMessages: userId => api.get('/messages/with_user/', { params: { user_id: userId } }),
   sendMessage: messageData => api.post('/messages/', messageData),
-  
+
   // Reviews
   getUserReviews: userId => api.get('/reviews/for_user/', { params: { user_id: userId } }),
-  createReview: reviewData => api.post('/reviews/', reviewData)
+  createReview: reviewData => api.post('/reviews/', reviewData),
 };
 
 export default apiService;
