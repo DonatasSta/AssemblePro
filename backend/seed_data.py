@@ -137,7 +137,7 @@ project3 = ProjectListing.objects.create(
     title="Office Desk & Chair Setup",
     description="Need help setting up a standing desk and ergonomic chair. The desk is a BEKANT sit/stand and the chair is a MARKUS from IKEA.",
     furniture_type="Office Furniture",
-    location="Miami, FL",
+    location="Edinburgh, UK",
     budget=75.00,
     status="open"
 )
@@ -147,7 +147,7 @@ project4 = ProjectListing.objects.create(
     title="Bookshelf Assembly",
     description="I have 3 BILLY bookcases from IKEA that need assembly. All materials and tools are available.",
     furniture_type="Bookshelf",
-    location="Miami, FL",
+    location="Edinburgh, UK",
     budget=90.00,
     status="in_progress",
     assigned_to=assembler1
@@ -159,7 +159,7 @@ completed_project = ProjectListing.objects.create(
     title="Bed Frame Assembly",
     description="IKEA MALM bed frame that needed assembly. Was completed successfully.",
     furniture_type="Bed",
-    location="Chicago, IL",
+    location="Birmingham, UK",
     budget=100.00,
     status="completed",
     assigned_to=assembler2
@@ -192,7 +192,7 @@ Message.objects.create(
 Message.objects.create(
     sender=customer1,
     receiver=assembler1,
-    content="Saturday afternoon works perfectly. I'm located in Chicago, IL. Can you give me an estimate for how long it might take?",
+    content="Saturday afternoon works perfectly. I'm located in Birmingham, UK. Can you give me an estimate for how long it might take?",
     is_read=False
 )
 

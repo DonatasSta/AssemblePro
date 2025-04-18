@@ -22,17 +22,17 @@ const ServiceDetail = ({ user }) => {
       setError(null);
       
       try {
-        // Fetch service details
-        const serviceResponse = await axios.get(`http://localhost:8000/api/services/${id}/`);
+        // Fetch service details using relative URL
+        const serviceResponse = await axios.get(`/api/services/${id}/`);
         setService(serviceResponse.data);
         
         // Fetch provider details
         const providerId = serviceResponse.data.provider;
-        const providerResponse = await axios.get(`http://localhost:8000/api/profiles/${providerId}/`);
+        const providerResponse = await axios.get(`/api/profiles/${providerId}/`);
         setProvider(providerResponse.data);
         
         // Fetch reviews for provider
-        const reviewsResponse = await axios.get(`http://localhost:8000/api/reviews/for_user/?user_id=${providerId}`);
+        const reviewsResponse = await axios.get(`/api/reviews/for_user/?user_id=${providerId}`);
         setReviews(reviewsResponse.data);
         
       } catch (err) {
@@ -63,8 +63,9 @@ const ServiceDetail = ({ user }) => {
     try {
       const token = getToken();
       
+      // Using relative URL for API
       await axios.post(
-        'http://localhost:8000/api/messages/',
+        '/api/messages/',
         {
           receiver: service.provider,
           content: messageText
@@ -137,7 +138,7 @@ const ServiceDetail = ({ user }) => {
               <h2 className="card-title mb-3">{service.title}</h2>
               
               <div className="d-flex justify-content-between align-items-center mb-4">
-                <span className="badge bg-success fs-5">${service.hourly_rate}/hour</span>
+                <span className="badge bg-success fs-5">£{service.hourly_rate}/hour</span>
                 <span className={`badge ${service.is_available ? 'bg-success' : 'bg-danger'}`}>
                   {service.is_available ? 'Available' : 'Not Available'}
                 </span>
