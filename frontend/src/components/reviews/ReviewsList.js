@@ -11,13 +11,15 @@ const ReviewsList = ({ userId }) => {
       fetchReviews();
     }
   }, [userId]);
-  
+
   const fetchReviews = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
-      const response = await axios.get(`http://localhost:8000/api/reviews/for_user/?user_id=${userId}`);
+      const response = await axios.get(
+        `http://localhost:8000/api/reviews/for_user/?user_id=${userId}`
+      );
       setReviews(response.data);
     } catch (err) {
       console.error('Error fetching reviews:', err);
@@ -26,11 +28,12 @@ const ReviewsList = ({ userId }) => {
       setLoading(false);
     }
   };
-  
+
   // Calculate average rating
-  const averageRating = reviews.length > 0 
-    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length 
-    : 0;
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+      : 0;
 
   if (loading) {
     return (
@@ -42,7 +45,7 @@ const ReviewsList = ({ userId }) => {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="alert alert-danger" role="alert">
@@ -50,7 +53,7 @@ const ReviewsList = ({ userId }) => {
       </div>
     );
   }
-  
+
   if (reviews.length === 0) {
     return (
       <div className="text-center py-3">
@@ -67,15 +70,15 @@ const ReviewsList = ({ userId }) => {
           <span className="text-muted">/{reviews.length} reviews</span>
         </div>
         <div>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <i 
-              key={star} 
+          {[1, 2, 3, 4, 5].map(star => (
+            <i
+              key={star}
               className={`bi ${star <= Math.round(averageRating) ? 'bi-star-fill' : 'bi-star'} text-warning fs-4`}
             ></i>
           ))}
         </div>
       </div>
-      
+
       {reviews.map(review => (
         <div key={review.id} className="mb-3 pb-3 border-bottom">
           <div className="d-flex justify-content-between align-items-center mb-2">
@@ -87,17 +90,15 @@ const ReviewsList = ({ userId }) => {
             </div>
             <div>
               {[...Array(5)].map((_, i) => (
-                <i 
-                  key={i} 
+                <i
+                  key={i}
                   className={`bi ${i < review.rating ? 'bi-star-fill' : 'bi-star'} text-warning`}
                 ></i>
               ))}
             </div>
           </div>
           <p className="mb-1">{review.comment}</p>
-          <small className="text-muted">
-            Project: {review.project_title}
-          </small>
+          <small className="text-muted">Project: {review.project_title}</small>
         </div>
       ))}
     </div>

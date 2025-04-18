@@ -12,37 +12,49 @@ const Footer = () => {
               Connecting people who need furniture assembled with skilled assemblers.
             </p>
           </div>
-          
+
           <div className="col-md-2 mb-3 mb-md-0">
             <h6 className="mb-3">Quick Links</h6>
             <ul className="list-unstyled">
               <li className="mb-2">
-                <Link to="/" className="text-decoration-none text-muted">Home</Link>
+                <Link to="/" className="text-decoration-none text-muted">
+                  Home
+                </Link>
               </li>
               <li className="mb-2">
-                <Link to="/services" className="text-decoration-none text-muted">Services</Link>
+                <Link to="/services" className="text-decoration-none text-muted">
+                  Services
+                </Link>
               </li>
               <li className="mb-2">
-                <Link to="/projects" className="text-decoration-none text-muted">Projects</Link>
+                <Link to="/projects" className="text-decoration-none text-muted">
+                  Projects
+                </Link>
               </li>
             </ul>
           </div>
-          
+
           <div className="col-md-3 mb-3 mb-md-0">
             <h6 className="mb-3">User</h6>
             <ul className="list-unstyled">
               <li className="mb-2">
-                <Link to="/login" className="text-decoration-none text-muted">Login</Link>
+                <Link to="/login" className="text-decoration-none text-muted">
+                  Login
+                </Link>
               </li>
               <li className="mb-2">
-                <Link to="/register" className="text-decoration-none text-muted">Register</Link>
+                <Link to="/register" className="text-decoration-none text-muted">
+                  Register
+                </Link>
               </li>
               <li className="mb-2">
-                <Link to="/profile" className="text-decoration-none text-muted">My Profile</Link>
+                <Link to="/profile" className="text-decoration-none text-muted">
+                  My Profile
+                </Link>
               </li>
             </ul>
           </div>
-          
+
           <div className="col-md-3">
             <h6 className="mb-3">Connect With Us</h6>
             <div className="d-flex">
@@ -61,9 +73,9 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        
+
         <hr className="my-3 bg-secondary" />
-        
+
         <div className="row align-items-center">
           <div className="col-md-6 text-center text-md-start">
             <p className="small text-muted mb-0">
@@ -72,8 +84,12 @@ const Footer = () => {
           </div>
           <div className="col-md-6 text-center text-md-end">
             <p className="small text-muted mb-0">
-              <Link to="#" className="text-decoration-none text-muted me-3">Privacy Policy</Link>
-              <Link to="#" className="text-decoration-none text-muted">Terms of Service</Link>
+              <Link to="#" className="text-decoration-none text-muted me-3">
+                Privacy Policy
+              </Link>
+              <Link to="#" className="text-decoration-none text-muted">
+                Terms of Service
+              </Link>
             </p>
           </div>
         </div>

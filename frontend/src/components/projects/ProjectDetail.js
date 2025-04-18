@@ -7,7 +7,7 @@ import ReviewForm from '../reviews/ReviewForm';
 const ProjectDetail = ({ user }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [project, setProject] = useState(null);
   const [creator, setCreator] = useState(null);
   const [assembler, setAssembler] = useState(null);
@@ -19,34 +19,35 @@ const ProjectDetail = ({ user }) => {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [statusUpdating, setStatusUpdating] = useState(false);
   const [assignError, setAssignError] = useState('');
-  
+
   useEffect(() => {
     fetchProjectDetails();
   }, [id]);
-  
+
   const fetchProjectDetails = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       // Fetch project details
       const projectResponse = await axios.get(`http://localhost:8000/api/projects/${id}/`);
       setProject(projectResponse.data);
-      
+
       // Fetch creator details
       const creatorId = projectResponse.data.creator;
       const creatorResponse = await axios.get(`http://localhost:8000/api/profiles/${creatorId}/`);
       setCreator(creatorResponse.data);
-      
+
       // Fetch assembler details if assigned
       if (projectResponse.data.assigned_to) {
         const assemblerId = projectResponse.data.assigned_to;
-        const assemblerResponse = await axios.get(`http://localhost:8000/api/profiles/${assemblerId}/`);
+        const assemblerResponse = await axios.get(
+          `http://localhost:8000/api/profiles/${assemblerId}/`
+        );
         setAssembler(assemblerResponse.data);
       } else {
         setAssembler(null);
       }
-      
     } catch (err) {
       console.error('Error fetching project details:', err);
       setError('Failed to load project details. Please try again later.');
@@ -54,38 +55,37 @@ const ProjectDetail = ({ user }) => {
       setLoading(false);
     }
   };
-  
+
   const handleContactUser = async (e, recipientId) => {
     e.preventDefault();
-    
+
     if (!isAuthenticated()) {
       navigate('/login');
       return;
     }
-    
+
     if (!messageText.trim()) {
       return;
     }
-    
+
     setMessageSending(true);
-    
+
     try {
       const token = getToken();
-      
+
       await axios.post(
         'http://localhost:8000/api/messages/',
         {
           receiver: recipientId,
-          content: messageText
+          content: messageText,
         },
         {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       setMessageSent(true);
       setMessageText('');
-      
     } catch (err) {
       console.error('Error sending message:', err);
       setError('Failed to send message. Please try again.');
@@ -93,30 +93,29 @@ const ProjectDetail = ({ user }) => {
       setMessageSending(false);
     }
   };
-  
+
   const handleAssignProject = async () => {
     if (!isAuthenticated()) {
       navigate('/login');
       return;
     }
-    
+
     setStatusUpdating(true);
     setAssignError('');
-    
+
     try {
       const token = getToken();
-      
+
       const response = await axios.patch(
         `http://localhost:8000/api/projects/${id}/assign/`,
         { assigned_to: user.id },
         {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       setProject(response.data);
       fetchProjectDetails(); // Refresh all data
-      
     } catch (err) {
       console.error('Error assigning project:', err);
       if (err.response && err.response.data && err.response.data.detail) {
@@ -128,28 +127,27 @@ const ProjectDetail = ({ user }) => {
       setStatusUpdating(false);
     }
   };
-  
-  const handleUpdateStatus = async (newStatus) => {
+
+  const handleUpdateStatus = async newStatus => {
     if (!isAuthenticated()) {
       navigate('/login');
       return;
     }
-    
+
     setStatusUpdating(true);
-    
+
     try {
       const token = getToken();
-      
+
       const response = await axios.patch(
         `http://localhost:8000/api/projects/${id}/update_status/`,
         { status: newStatus },
         {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       setProject(response.data);
-      
     } catch (err) {
       console.error('Error updating project status:', err);
       setError('Failed to update project status. Please try again.');
@@ -157,13 +155,11 @@ const ProjectDetail = ({ user }) => {
       setStatusUpdating(false);
     }
   };
-  
+
   const isCreator = user && project && user.id === project.creator;
   const isAssignedAssembler = user && project && project.assigned_to === user.id;
-  const canReview = project && 
-                   project.status === 'completed' && 
-                   (isCreator || isAssignedAssembler);
-  
+  const canReview = project && project.status === 'completed' && (isCreator || isAssignedAssembler);
+
   if (loading) {
     return (
       <div className="container py-5 text-center">
@@ -174,7 +170,7 @@ const ProjectDetail = ({ user }) => {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="container py-5">
@@ -189,7 +185,7 @@ const ProjectDetail = ({ user }) => {
       </div>
     );
   }
-  
+
   if (!project || !creator) {
     return (
       <div className="container py-5">
@@ -213,29 +209,44 @@ const ProjectDetail = ({ user }) => {
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="card-title mb-0">{project.title}</h2>
-                <span className={`badge ${
-                  project.status === 'open' ? 'bg-primary' : 
-                  project.status === 'in_progress' ? 'bg-warning' : 
-                  project.status === 'completed' ? 'bg-success' : 'bg-danger'
-                }`}>
+                <span
+                  className={`badge ${
+                    project.status === 'open'
+                      ? 'bg-primary'
+                      : project.status === 'in_progress'
+                        ? 'bg-warning'
+                        : project.status === 'completed'
+                          ? 'bg-success'
+                          : 'bg-danger'
+                  }`}
+                >
                   {project.status.replace('_', ' ')}
                 </span>
               </div>
-              
+
               <p className="mb-4">{project.description}</p>
-              
+
               <div className="row mb-4">
                 <div className="col-md-6">
                   <h4 className="h5">Project Details</h4>
                   <ul className="list-unstyled">
                     <li className="mb-2">
-                      <strong><i className="bi bi-tag me-2"></i>Furniture Type:</strong> {project.furniture_type}
+                      <strong>
+                        <i className="bi bi-tag me-2"></i>Furniture Type:
+                      </strong>{' '}
+                      {project.furniture_type}
                     </li>
                     <li className="mb-2">
-                      <strong><i className="bi bi-geo-alt me-2"></i>Location:</strong> {project.location}
+                      <strong>
+                        <i className="bi bi-geo-alt me-2"></i>Location:
+                      </strong>{' '}
+                      {project.location}
                     </li>
                     <li>
-                      <strong><i className="bi bi-calendar me-2"></i>Posted:</strong> {new Date(project.created_at).toLocaleDateString()}
+                      <strong>
+                        <i className="bi bi-calendar me-2"></i>Posted:
+                      </strong>{' '}
+                      {new Date(project.created_at).toLocaleDateString()}
                     </li>
                   </ul>
                 </div>
@@ -248,73 +259,88 @@ const ProjectDetail = ({ user }) => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Project actions for creator */}
               {isCreator && (
                 <div className="card bg-light mb-4">
                   <div className="card-body">
                     <h4 className="h5 mb-3">Project Management</h4>
-                    
+
                     {project.status === 'open' && (
                       <div className="mb-3">
                         <p>Your project is open and waiting for an assembler.</p>
-                        <button 
+                        <button
                           className="btn btn-danger"
                           onClick={() => handleUpdateStatus('cancelled')}
                           disabled={statusUpdating}
                         >
                           {statusUpdating ? (
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                          ) : <i className="bi bi-x-circle me-2"></i>}
+                            <span
+                              className="spinner-border spinner-border-sm me-2"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
+                          ) : (
+                            <i className="bi bi-x-circle me-2"></i>
+                          )}
                           Cancel Project
                         </button>
                       </div>
                     )}
-                    
+
                     {project.status === 'in_progress' && (
                       <div className="mb-3">
                         <p>Your project is being worked on by {project.assigned_to_name}.</p>
                         <div className="d-flex gap-2">
-                          <button 
+                          <button
                             className="btn btn-success"
                             onClick={() => handleUpdateStatus('completed')}
                             disabled={statusUpdating}
                           >
                             {statusUpdating ? (
-                              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                            ) : <i className="bi bi-check-circle me-2"></i>}
+                              <span
+                                className="spinner-border spinner-border-sm me-2"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                            ) : (
+                              <i className="bi bi-check-circle me-2"></i>
+                            )}
                             Mark as Completed
                           </button>
-                          <button 
+                          <button
                             className="btn btn-danger"
                             onClick={() => handleUpdateStatus('cancelled')}
                             disabled={statusUpdating}
                           >
                             {statusUpdating ? (
-                              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                            ) : <i className="bi bi-x-circle me-2"></i>}
+                              <span
+                                className="spinner-border spinner-border-sm me-2"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                            ) : (
+                              <i className="bi bi-x-circle me-2"></i>
+                            )}
                             Cancel Project
                           </button>
                         </div>
                       </div>
                     )}
-                    
+
                     {project.status === 'completed' && !showReviewForm && (
                       <div className="mb-3">
                         <p>This project has been completed. Would you like to leave a review?</p>
-                        <button 
-                          className="btn btn-primary"
-                          onClick={() => setShowReviewForm(true)}
-                        >
+                        <button className="btn btn-primary" onClick={() => setShowReviewForm(true)}>
                           <i className="bi bi-star me-2"></i>Leave Review
                         </button>
                       </div>
                     )}
-                    
+
                     {showReviewForm && isCreator && project.status === 'completed' && (
-                      <ReviewForm 
-                        projectId={project.id} 
-                        revieweeId={project.assigned_to} 
+                      <ReviewForm
+                        projectId={project.id}
+                        revieweeId={project.assigned_to}
                         onReviewSubmitted={() => {
                           setShowReviewForm(false);
                           fetchProjectDetails();
@@ -324,33 +350,33 @@ const ProjectDetail = ({ user }) => {
                   </div>
                 </div>
               )}
-              
+
               {/* Project actions for assembler */}
               {isAssignedAssembler && (
                 <div className="card bg-light mb-4">
                   <div className="card-body">
                     <h4 className="h5 mb-3">Assembler Actions</h4>
-                    
+
                     {project.status === 'in_progress' && (
                       <p>You're currently working on this project.</p>
                     )}
-                    
+
                     {project.status === 'completed' && !showReviewForm && (
                       <div className="mb-3">
-                        <p>This project has been completed. Would you like to leave a review for the client?</p>
-                        <button 
-                          className="btn btn-primary"
-                          onClick={() => setShowReviewForm(true)}
-                        >
+                        <p>
+                          This project has been completed. Would you like to leave a review for the
+                          client?
+                        </p>
+                        <button className="btn btn-primary" onClick={() => setShowReviewForm(true)}>
                           <i className="bi bi-star me-2"></i>Leave Review
                         </button>
                       </div>
                     )}
-                    
+
                     {showReviewForm && isAssignedAssembler && project.status === 'completed' && (
-                      <ReviewForm 
-                        projectId={project.id} 
-                        revieweeId={project.creator} 
+                      <ReviewForm
+                        projectId={project.id}
+                        revieweeId={project.creator}
                         onReviewSubmitted={() => {
                           setShowReviewForm(false);
                           fetchProjectDetails();
@@ -360,41 +386,43 @@ const ProjectDetail = ({ user }) => {
                   </div>
                 </div>
               )}
-              
+
               {/* Take this project button for assemblers */}
-              {user && 
-                user.profile && 
-                user.profile.is_assembler && 
+              {user &&
+                user.profile &&
+                user.profile.is_assembler &&
                 !isCreator &&
                 !isAssignedAssembler &&
                 project.status === 'open' && (
-                <div className="card bg-light mb-4">
-                  <div className="card-body">
-                    <h4 className="h5 mb-3">Interested in this project?</h4>
-                    
-                    {assignError && (
-                      <div className="alert alert-danger mb-3">
-                        {assignError}
-                      </div>
-                    )}
-                    
-                    <button 
-                      className="btn btn-success"
-                      onClick={handleAssignProject}
-                      disabled={statusUpdating}
-                    >
-                      {statusUpdating ? (
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                      ) : <i className="bi bi-check-circle me-2"></i>}
-                      Take this Project
-                    </button>
+                  <div className="card bg-light mb-4">
+                    <div className="card-body">
+                      <h4 className="h5 mb-3">Interested in this project?</h4>
+
+                      {assignError && <div className="alert alert-danger mb-3">{assignError}</div>}
+
+                      <button
+                        className="btn btn-success"
+                        onClick={handleAssignProject}
+                        disabled={statusUpdating}
+                      >
+                        {statusUpdating ? (
+                          <span
+                            className="spinner-border spinner-border-sm me-2"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                        ) : (
+                          <i className="bi bi-check-circle me-2"></i>
+                        )}
+                        Take this Project
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           </div>
         </div>
-        
+
         <div className="col-lg-4">
           <div className="card shadow-sm mb-4">
             <div className="card-header bg-primary text-white">
@@ -403,32 +431,39 @@ const ProjectDetail = ({ user }) => {
             <div className="card-body">
               <div className="text-center mb-3">
                 <i className="bi bi-person-circle text-primary" style={{ fontSize: '3rem' }}></i>
-                <h4 className="mt-2 mb-0">{creator.first_name} {creator.last_name}</h4>
+                <h4 className="mt-2 mb-0">
+                  {creator.first_name} {creator.last_name}
+                </h4>
                 <p className="text-muted">@{creator.username}</p>
-                
+
                 {creator.average_rating > 0 && (
                   <div className="mb-3">
                     <div className="d-flex justify-content-center align-items-center">
                       <span className="me-1">{creator.average_rating.toFixed(1)}</span>
                       <div>
                         {[...Array(5)].map((_, i) => (
-                          <i key={i} className={`bi ${i < Math.round(creator.average_rating) ? 'bi-star-fill' : 'bi-star'} text-warning`}></i>
+                          <i
+                            key={i}
+                            className={`bi ${i < Math.round(creator.average_rating) ? 'bi-star-fill' : 'bi-star'} text-warning`}
+                          ></i>
                         ))}
                       </div>
                     </div>
                   </div>
                 )}
               </div>
-              
+
               <div className="mb-3">
                 <p className="text-muted mb-1">
-                  <i className="bi bi-geo-alt me-1"></i> {creator.location || 'No location specified'}
+                  <i className="bi bi-geo-alt me-1"></i>{' '}
+                  {creator.location || 'No location specified'}
                 </p>
                 <p className="text-muted mb-3">
-                  <i className="bi bi-calendar me-1"></i> Member since {new Date(creator.date_joined).toLocaleDateString()}
+                  <i className="bi bi-calendar me-1"></i> Member since{' '}
+                  {new Date(creator.date_joined).toLocaleDateString()}
                 </p>
               </div>
-              
+
               {!isCreator && (
                 <div className="d-grid">
                   <button
@@ -444,7 +479,7 @@ const ProjectDetail = ({ user }) => {
               )}
             </div>
           </div>
-          
+
           {/* Assembler info card if project is assigned */}
           {project.assigned_to && assembler && (
             <div className="card shadow-sm mb-4">
@@ -454,29 +489,35 @@ const ProjectDetail = ({ user }) => {
               <div className="card-body">
                 <div className="text-center mb-3">
                   <i className="bi bi-person-circle text-success" style={{ fontSize: '3rem' }}></i>
-                  <h4 className="mt-2 mb-0">{assembler.first_name} {assembler.last_name}</h4>
+                  <h4 className="mt-2 mb-0">
+                    {assembler.first_name} {assembler.last_name}
+                  </h4>
                   <p className="text-muted">@{assembler.username}</p>
-                  
+
                   {assembler.average_rating > 0 && (
                     <div className="mb-3">
                       <div className="d-flex justify-content-center align-items-center">
                         <span className="me-1">{assembler.average_rating.toFixed(1)}</span>
                         <div>
                           {[...Array(5)].map((_, i) => (
-                            <i key={i} className={`bi ${i < Math.round(assembler.average_rating) ? 'bi-star-fill' : 'bi-star'} text-warning`}></i>
+                            <i
+                              key={i}
+                              className={`bi ${i < Math.round(assembler.average_rating) ? 'bi-star-fill' : 'bi-star'} text-warning`}
+                            ></i>
                           ))}
                         </div>
                       </div>
                     </div>
                   )}
                 </div>
-                
+
                 <div className="mb-3">
                   <p className="text-muted mb-1">
-                    <i className="bi bi-geo-alt me-1"></i> {assembler.location || 'No location specified'}
+                    <i className="bi bi-geo-alt me-1"></i>{' '}
+                    {assembler.location || 'No location specified'}
                   </p>
                 </div>
-                
+
                 {isCreator && !isAssignedAssembler && (
                   <div className="d-grid">
                     <button
@@ -493,7 +534,7 @@ const ProjectDetail = ({ user }) => {
               </div>
             </div>
           )}
-          
+
           {/* Contact Creator Form */}
           {!isCreator && (
             <div className="collapse mb-4" id="contactCreatorForm">
@@ -513,25 +554,29 @@ const ProjectDetail = ({ user }) => {
                       You need to <Link to="/login">login</Link> to contact the creator.
                     </div>
                   ) : (
-                    <form onSubmit={(e) => handleContactUser(e, project.creator)}>
+                    <form onSubmit={e => handleContactUser(e, project.creator)}>
                       <div className="mb-3">
                         <textarea
                           className="form-control"
                           rows="4"
                           placeholder="Ask questions about the project..."
                           value={messageText}
-                          onChange={(e) => setMessageText(e.target.value)}
+                          onChange={e => setMessageText(e.target.value)}
                           required
                         ></textarea>
                       </div>
-                      <button 
-                        type="submit" 
+                      <button
+                        type="submit"
                         className="btn btn-primary w-100"
                         disabled={messageSending}
                       >
                         {messageSending ? (
                           <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span
+                              className="spinner-border spinner-border-sm me-2"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
                             Sending...
                           </>
                         ) : (
@@ -546,7 +591,7 @@ const ProjectDetail = ({ user }) => {
               </div>
             </div>
           )}
-          
+
           {/* Contact Assembler Form */}
           {isCreator && project.assigned_to && (
             <div className="collapse mb-4" id="contactAssemblerForm">
@@ -561,25 +606,29 @@ const ProjectDetail = ({ user }) => {
                       Message sent successfully!
                     </div>
                   ) : (
-                    <form onSubmit={(e) => handleContactUser(e, project.assigned_to)}>
+                    <form onSubmit={e => handleContactUser(e, project.assigned_to)}>
                       <div className="mb-3">
                         <textarea
                           className="form-control"
                           rows="4"
                           placeholder="Send details, instructions, or questions..."
                           value={messageText}
-                          onChange={(e) => setMessageText(e.target.value)}
+                          onChange={e => setMessageText(e.target.value)}
                           required
                         ></textarea>
                       </div>
-                      <button 
-                        type="submit" 
+                      <button
+                        type="submit"
                         className="btn btn-primary w-100"
                         disabled={messageSending}
                       >
                         {messageSending ? (
                           <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span
+                              className="spinner-border spinner-border-sm me-2"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
                             Sending...
                           </>
                         ) : (
@@ -594,7 +643,7 @@ const ProjectDetail = ({ user }) => {
               </div>
             </div>
           )}
-          
+
           <div className="d-grid">
             <Link to="/projects" className="btn btn-outline-secondary">
               <i className="bi bi-arrow-left me-1"></i> Back to Projects

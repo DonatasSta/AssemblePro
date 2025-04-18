@@ -5,52 +5,51 @@ import { getToken } from '../../utils/auth';
 const ReviewForm = ({ projectId, revieweeId, onReviewSubmitted }) => {
   const [formData, setFormData] = useState({
     rating: 5,
-    comment: ''
+    comment: '',
   });
-  
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
-  const handleChange = (e) => {
+
+  const handleChange = e => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name === 'rating' ? parseInt(value) : value
+      [name]: name === 'rating' ? parseInt(value) : value,
     });
   };
-  
-  const handleSubmit = async (e) => {
+
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+
     if (!formData.comment.trim()) {
       setError('Please provide a comment for your review.');
       return;
     }
-    
+
     setLoading(true);
     setError('');
-    
+
     try {
       const token = getToken();
-      
+
       await axios.post(
         'http://localhost:8000/api/reviews/',
         {
           project: projectId,
           reviewee: revieweeId,
           rating: formData.rating,
-          comment: formData.comment
+          comment: formData.comment,
         },
         {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       // Call the callback function to notify the parent component
       if (onReviewSubmitted) {
         onReviewSubmitted();
       }
-      
     } catch (err) {
       console.error('Error submitting review:', err);
       if (err.response && err.response.data && err.response.data.detail) {
@@ -66,18 +65,20 @@ const ReviewForm = ({ projectId, revieweeId, onReviewSubmitted }) => {
   return (
     <div className="review-form">
       <h5 className="mb-3">Write a Review</h5>
-      
+
       {error && (
         <div className="alert alert-danger" role="alert">
           {error}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="rating" className="form-label">Rating</label>
+          <label htmlFor="rating" className="form-label">
+            Rating
+          </label>
           <div className="rating-input d-flex">
-            {[1, 2, 3, 4, 5].map((star) => (
+            {[1, 2, 3, 4, 5].map(star => (
               <div key={star} className="form-check form-check-inline">
                 <input
                   className="form-check-input"
@@ -89,15 +90,19 @@ const ReviewForm = ({ projectId, revieweeId, onReviewSubmitted }) => {
                   onChange={handleChange}
                 />
                 <label className="form-check-label" htmlFor={`rating-${star}`}>
-                  <i className={`bi ${formData.rating >= star ? 'bi-star-fill' : 'bi-star'} text-warning fs-4`}></i>
+                  <i
+                    className={`bi ${formData.rating >= star ? 'bi-star-fill' : 'bi-star'} text-warning fs-4`}
+                  ></i>
                 </label>
               </div>
             ))}
           </div>
         </div>
-        
+
         <div className="mb-3">
-          <label htmlFor="comment" className="form-label">Your Review</label>
+          <label htmlFor="comment" className="form-label">
+            Your Review
+          </label>
           <textarea
             className="form-control"
             id="comment"
@@ -109,16 +114,16 @@ const ReviewForm = ({ projectId, revieweeId, onReviewSubmitted }) => {
             required
           ></textarea>
         </div>
-        
+
         <div className="d-grid gap-2">
-          <button 
-            type="submit" 
-            className="btn btn-primary"
-            disabled={loading}
-          >
+          <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
                 Submitting...
               </>
             ) : (
@@ -127,8 +132,8 @@ const ReviewForm = ({ projectId, revieweeId, onReviewSubmitted }) => {
               </>
             )}
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="btn btn-outline-secondary"
             onClick={() => onReviewSubmitted && onReviewSubmitted()}
             disabled={loading}

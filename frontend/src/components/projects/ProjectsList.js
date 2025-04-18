@@ -6,7 +6,7 @@ const ProjectsList = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   // Filters and search
   const [searchTerm, setSearchTerm] = useState('');
   const [furnitureType, setFurnitureType] = useState('');
@@ -18,20 +18,20 @@ const ProjectsList = () => {
   useEffect(() => {
     fetchProjects();
   }, [status, sortBy]); // Re-fetch when these change
-  
+
   const fetchProjects = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const params = {
-        ordering: sortBy
+        ordering: sortBy,
       };
-      
+
       if (status) {
         params.status = status;
       }
-      
+
       const response = await apiService.getProjects(params);
       setProjects(response.data);
     } catch (err) {
@@ -41,38 +41,39 @@ const ProjectsList = () => {
       setLoading(false);
     }
   };
-  
-  const handleSearch = (e) => {
+
+  const handleSearch = e => {
     e.preventDefault();
-    
+
     const params = {
-      ordering: sortBy
+      ordering: sortBy,
     };
-    
+
     if (status) {
       params.status = status;
     }
-    
+
     if (searchTerm) {
       params.search = searchTerm;
     }
-    
+
     if (furnitureType) {
       params.furniture_type = furnitureType;
     }
-    
+
     if (minBudget) {
       params.budget__gte = minBudget;
     }
-    
+
     if (maxBudget) {
       params.budget__lte = maxBudget;
     }
-    
+
     setLoading(true);
     setError(null);
-    
-    apiService.getProjects(params)
+
+    apiService
+      .getProjects(params)
       .then(response => {
         setProjects(response.data);
         setLoading(false);
@@ -83,7 +84,7 @@ const ProjectsList = () => {
         setLoading(false);
       });
   };
-  
+
   const resetFilters = () => {
     setSearchTerm('');
     setFurnitureType('');
@@ -93,10 +94,18 @@ const ProjectsList = () => {
     setSortBy('-created_at');
     fetchProjects();
   };
-  
+
   // Common furniture types for the filter dropdown
   const commonFurnitureTypes = [
-    'Wardrobe', 'Bed', 'Couch', 'Desk', 'Chair', 'Table', 'Bookshelf', 'Cabinet', 'Entertainment Center'
+    'Wardrobe',
+    'Bed',
+    'Couch',
+    'Desk',
+    'Chair',
+    'Table',
+    'Bookshelf',
+    'Cabinet',
+    'Entertainment Center',
   ];
 
   return (
@@ -109,7 +118,7 @@ const ProjectsList = () => {
           </p>
         </div>
       </div>
-      
+
       <div className="row">
         <div className="col-lg-3 mb-4">
           <div className="card shadow-sm">
@@ -119,32 +128,38 @@ const ProjectsList = () => {
             <div className="card-body">
               <form onSubmit={handleSearch}>
                 <div className="mb-3">
-                  <label htmlFor="searchTerm" className="form-label">Search</label>
+                  <label htmlFor="searchTerm" className="form-label">
+                    Search
+                  </label>
                   <input
                     type="text"
                     className="form-control"
                     id="searchTerm"
                     placeholder="Search projects..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={e => setSearchTerm(e.target.value)}
                   />
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="furnitureType" className="form-label">Furniture Type</label>
+                  <label htmlFor="furnitureType" className="form-label">
+                    Furniture Type
+                  </label>
                   <select
                     className="form-select"
                     id="furnitureType"
                     value={furnitureType}
-                    onChange={(e) => setFurnitureType(e.target.value)}
+                    onChange={e => setFurnitureType(e.target.value)}
                   >
                     <option value="">Any Type</option>
                     {commonFurnitureTypes.map(type => (
-                      <option key={type} value={type.toLowerCase()}>{type}</option>
+                      <option key={type} value={type.toLowerCase()}>
+                        {type}
+                      </option>
                     ))}
                   </select>
                 </div>
-                
+
                 <div className="mb-3">
                   <label className="form-label">Budget Range (£)</label>
                   <div className="row g-2">
@@ -154,7 +169,7 @@ const ProjectsList = () => {
                         className="form-control"
                         placeholder="Min"
                         value={minBudget}
-                        onChange={(e) => setMinBudget(e.target.value)}
+                        onChange={e => setMinBudget(e.target.value)}
                         min="0"
                       />
                     </div>
@@ -164,20 +179,22 @@ const ProjectsList = () => {
                         className="form-control"
                         placeholder="Max"
                         value={maxBudget}
-                        onChange={(e) => setMaxBudget(e.target.value)}
+                        onChange={e => setMaxBudget(e.target.value)}
                         min="0"
                       />
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="status" className="form-label">Project Status</label>
+                  <label htmlFor="status" className="form-label">
+                    Project Status
+                  </label>
                   <select
                     className="form-select"
                     id="status"
                     value={status}
-                    onChange={(e) => setStatus(e.target.value)}
+                    onChange={e => setStatus(e.target.value)}
                   >
                     <option value="">Any Status</option>
                     <option value="open">Open</option>
@@ -186,14 +203,16 @@ const ProjectsList = () => {
                     <option value="cancelled">Cancelled</option>
                   </select>
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="sortBy" className="form-label">Sort By</label>
+                  <label htmlFor="sortBy" className="form-label">
+                    Sort By
+                  </label>
                   <select
                     className="form-select"
                     id="sortBy"
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
+                    onChange={e => setSortBy(e.target.value)}
                   >
                     <option value="-created_at">Newest First</option>
                     <option value="created_at">Oldest First</option>
@@ -201,13 +220,13 @@ const ProjectsList = () => {
                     <option value="-budget">Budget (High to Low)</option>
                   </select>
                 </div>
-                
+
                 <div className="d-grid gap-2">
                   <button type="submit" className="btn btn-primary">
                     <i className="bi bi-search me-1"></i> Apply Filters
                   </button>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className="btn btn-outline-secondary"
                     onClick={resetFilters}
                   >
@@ -218,7 +237,7 @@ const ProjectsList = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="col-lg-9">
           {loading ? (
             <div className="text-center py-5">
@@ -240,10 +259,7 @@ const ProjectsList = () => {
                   We couldn't find any furniture assembly projects matching your criteria.
                 </p>
                 <div className="d-flex justify-content-center gap-3">
-                  <button 
-                    className="btn btn-outline-primary" 
-                    onClick={resetFilters}
-                  >
+                  <button className="btn btn-outline-primary" onClick={resetFilters}>
                     Clear Filters
                   </button>
                   <Link to="/projects/create" className="btn btn-primary">
@@ -262,28 +278,38 @@ const ProjectsList = () => {
                   <i className="bi bi-plus-lg me-1"></i> Post a Project
                 </Link>
               </div>
-              
+
               <div className="card shadow-sm">
                 <div className="list-group list-group-flush">
                   {projects.map(project => (
-                    <Link 
+                    <Link
                       to={`/projects/${project.id}`}
                       className="list-group-item list-group-item-action p-4"
                       key={project.id}
                     >
                       <div className="d-flex justify-content-between align-items-center mb-2">
                         <h4 className="h5 mb-0">{project.title}</h4>
-                        <span className={`badge ${
-                          project.status === 'open' ? 'bg-primary' : 
-                          project.status === 'in_progress' ? 'bg-warning' : 
-                          project.status === 'completed' ? 'bg-success' : 'bg-danger'
-                        }`}>
+                        <span
+                          className={`badge ${
+                            project.status === 'open'
+                              ? 'bg-primary'
+                              : project.status === 'in_progress'
+                                ? 'bg-warning'
+                                : project.status === 'completed'
+                                  ? 'bg-success'
+                                  : 'bg-danger'
+                          }`}
+                        >
                           {project.status.replace('_', ' ')}
                         </span>
                       </div>
-                      
-                      <p className="mb-3">{project.description.length > 150 ? `${project.description.substring(0, 150)}...` : project.description}</p>
-                      
+
+                      <p className="mb-3">
+                        {project.description.length > 150
+                          ? `${project.description.substring(0, 150)}...`
+                          : project.description}
+                      </p>
+
                       <div className="d-flex justify-content-between align-items-center text-muted">
                         <div>
                           <small className="d-block d-md-inline me-md-3">
@@ -296,9 +322,7 @@ const ProjectsList = () => {
                             <i className="bi bi-person me-1"></i> {project.creator_name}
                           </small>
                         </div>
-                        <div className="text-primary fw-bold">
-                          £{project.budget}
-                        </div>
+                        <div className="text-primary fw-bold">£{project.budget}</div>
                       </div>
                     </Link>
                   ))}

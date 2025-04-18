@@ -11,80 +11,89 @@ const CreateProject = () => {
     description: '',
     furniture_type: '',
     location: '',
-    budget: ''
+    budget: '',
   });
-  
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  
+
   // Common furniture types for dropdown
   const furnitureTypes = [
-    'Wardrobe', 'Bed', 'Couch', 'Desk', 'Chair', 'Table', 'Bookshelf', 
-    'Cabinet', 'Entertainment Center', 'Dresser', 'Shelving Unit', 'Other'
+    'Wardrobe',
+    'Bed',
+    'Couch',
+    'Desk',
+    'Chair',
+    'Table',
+    'Bookshelf',
+    'Cabinet',
+    'Entertainment Center',
+    'Dresser',
+    'Shelving Unit',
+    'Other',
   ];
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.title.trim()) {
       newErrors.title = 'Title is required';
     }
-    
+
     if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     }
-    
+
     if (!formData.furniture_type.trim()) {
       newErrors.furniture_type = 'Furniture type is required';
     }
-    
+
     if (!formData.location.trim()) {
       newErrors.location = 'Location is required';
     }
-    
+
     if (!formData.budget) {
       newErrors.budget = 'Budget is required';
     } else if (isNaN(formData.budget) || parseFloat(formData.budget) <= 0) {
       newErrors.budget = 'Budget must be a positive number';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       const token = getToken();
       const response = await axios.post(
         'http://localhost:8000/api/projects/',
         {
           ...formData,
-          budget: parseFloat(formData.budget)
+          budget: parseFloat(formData.budget),
         },
         {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       // Redirect to the newly created project page
       navigate(`/projects/${response.data.id}`);
-      
     } catch (err) {
       console.error('Error creating project:', err);
       if (err.response && err.response.data) {
@@ -113,10 +122,12 @@ const CreateProject = () => {
                   ))}
                 </div>
               )}
-              
+
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="title" className="form-label">Project Title *</label>
+                  <label htmlFor="title" className="form-label">
+                    Project Title *
+                  </label>
                   <input
                     type="text"
                     className={`form-control ${errors.title ? 'is-invalid' : ''}`}
@@ -126,13 +137,13 @@ const CreateProject = () => {
                     onChange={handleChange}
                     placeholder="e.g., IKEA PAX Wardrobe Assembly"
                   />
-                  {errors.title && (
-                    <div className="invalid-feedback">{errors.title}</div>
-                  )}
+                  {errors.title && <div className="invalid-feedback">{errors.title}</div>}
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="description" className="form-label">Description *</label>
+                  <label htmlFor="description" className="form-label">
+                    Description *
+                  </label>
                   <textarea
                     className={`form-control ${errors.description ? 'is-invalid' : ''}`}
                     id="description"
@@ -146,9 +157,11 @@ const CreateProject = () => {
                     <div className="invalid-feedback">{errors.description}</div>
                   )}
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="furniture_type" className="form-label">Furniture Type *</label>
+                  <label htmlFor="furniture_type" className="form-label">
+                    Furniture Type *
+                  </label>
                   <select
                     className={`form-select ${errors.furniture_type ? 'is-invalid' : ''}`}
                     id="furniture_type"
@@ -158,16 +171,20 @@ const CreateProject = () => {
                   >
                     <option value="">Select furniture type</option>
                     {furnitureTypes.map(type => (
-                      <option key={type} value={type}>{type}</option>
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
                     ))}
                   </select>
                   {errors.furniture_type && (
                     <div className="invalid-feedback">{errors.furniture_type}</div>
                   )}
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="location" className="form-label">Location *</label>
+                  <label htmlFor="location" className="form-label">
+                    Location *
+                  </label>
                   <input
                     type="text"
                     className={`form-control ${errors.location ? 'is-invalid' : ''}`}
@@ -177,13 +194,13 @@ const CreateProject = () => {
                     onChange={handleChange}
                     placeholder="Your address or general area (e.g., North End, Boston, MA)"
                   />
-                  {errors.location && (
-                    <div className="invalid-feedback">{errors.location}</div>
-                  )}
+                  {errors.location && <div className="invalid-feedback">{errors.location}</div>}
                 </div>
-                
+
                 <div className="mb-4">
-                  <label htmlFor="budget" className="form-label">Budget ($) *</label>
+                  <label htmlFor="budget" className="form-label">
+                    Budget ($) *
+                  </label>
                   <input
                     type="number"
                     className={`form-control ${errors.budget ? 'is-invalid' : ''}`}
@@ -195,29 +212,30 @@ const CreateProject = () => {
                     min="0"
                     step="0.01"
                   />
-                  {errors.budget && (
-                    <div className="invalid-feedback">{errors.budget}</div>
-                  )}
+                  {errors.budget && <div className="invalid-feedback">{errors.budget}</div>}
                   <small className="form-text text-muted">
-                    Set a reasonable budget for your project. This helps attract qualified assemblers.
+                    Set a reasonable budget for your project. This helps attract qualified
+                    assemblers.
                   </small>
                 </div>
-                
+
                 <div className="d-grid gap-2">
-                  <button 
-                    type="submit" 
-                    className="btn btn-primary" 
-                    disabled={loading}
-                  >
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
                     {loading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
                         Posting...
                       </>
-                    ) : 'Post Project'}
+                    ) : (
+                      'Post Project'
+                    )}
                   </button>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => navigate('/projects')}
                   >

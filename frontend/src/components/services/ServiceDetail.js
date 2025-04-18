@@ -6,7 +6,7 @@ import { getToken, isAuthenticated } from '../../utils/auth';
 const ServiceDetail = ({ user }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [service, setService] = useState(null);
   const [provider, setProvider] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -15,26 +15,25 @@ const ServiceDetail = ({ user }) => {
   const [messageText, setMessageText] = useState('');
   const [messageSent, setMessageSent] = useState(false);
   const [messageSending, setMessageSending] = useState(false);
-  
+
   useEffect(() => {
     const fetchServiceDetails = async () => {
       setLoading(true);
       setError(null);
-      
+
       try {
         // Fetch service details using relative URL
         const serviceResponse = await axios.get(`/api/services/${id}/`);
         setService(serviceResponse.data);
-        
+
         // Fetch provider details
         const providerId = serviceResponse.data.provider;
         const providerResponse = await axios.get(`/api/profiles/${providerId}/`);
         setProvider(providerResponse.data);
-        
+
         // Fetch reviews for provider
         const reviewsResponse = await axios.get(`/api/reviews/for_user/?user_id=${providerId}`);
         setReviews(reviewsResponse.data);
-        
       } catch (err) {
         console.error('Error fetching service details:', err);
         setError('Failed to load service details. Please try again later.');
@@ -42,42 +41,41 @@ const ServiceDetail = ({ user }) => {
         setLoading(false);
       }
     };
-    
+
     fetchServiceDetails();
   }, [id]);
-  
-  const handleContactProvider = async (e) => {
+
+  const handleContactProvider = async e => {
     e.preventDefault();
-    
+
     if (!isAuthenticated()) {
       navigate('/login');
       return;
     }
-    
+
     if (!messageText.trim()) {
       return;
     }
-    
+
     setMessageSending(true);
-    
+
     try {
       const token = getToken();
-      
+
       // Using relative URL for API
       await axios.post(
         '/api/messages/',
         {
           receiver: service.provider,
-          content: messageText
+          content: messageText,
         },
         {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       setMessageSent(true);
       setMessageText('');
-      
     } catch (err) {
       console.error('Error sending message:', err);
       setError('Failed to send message. Please try again.');
@@ -85,7 +83,7 @@ const ServiceDetail = ({ user }) => {
       setMessageSending(false);
     }
   };
-  
+
   const isOwnService = user && service && user.id === service.provider;
 
   if (loading) {
@@ -98,7 +96,7 @@ const ServiceDetail = ({ user }) => {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="container py-5">
@@ -113,7 +111,7 @@ const ServiceDetail = ({ user }) => {
       </div>
     );
   }
-  
+
   if (!service || !provider) {
     return (
       <div className="container py-5">
@@ -136,26 +134,27 @@ const ServiceDetail = ({ user }) => {
           <div className="card shadow-sm mb-4">
             <div className="card-body">
               <h2 className="card-title mb-3">{service.title}</h2>
-              
+
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <span className="badge bg-success fs-5">£{service.hourly_rate}/hour</span>
                 <span className={`badge ${service.is_available ? 'bg-success' : 'bg-danger'}`}>
                   {service.is_available ? 'Available' : 'Not Available'}
                 </span>
               </div>
-              
+
               <div className="mb-4">
                 <h4>Description</h4>
                 <p className="mb-0">{service.description}</p>
               </div>
-              
+
               <div className="mb-4">
                 <h4>Experience</h4>
                 <p className="mb-0">
-                  {service.experience_years} {service.experience_years === 1 ? 'year' : 'years'} of experience in furniture assembly
+                  {service.experience_years} {service.experience_years === 1 ? 'year' : 'years'} of
+                  experience in furniture assembly
                 </p>
               </div>
-              
+
               {isOwnService && (
                 <div className="d-grid gap-2">
                   <Link to={`/services/${service.id}/edit`} className="btn btn-primary">
@@ -165,7 +164,7 @@ const ServiceDetail = ({ user }) => {
               )}
             </div>
           </div>
-          
+
           {/* Reviews section */}
           <div className="card shadow-sm">
             <div className="card-header">
@@ -190,17 +189,15 @@ const ServiceDetail = ({ user }) => {
                         </div>
                         <div>
                           {[...Array(5)].map((_, i) => (
-                            <i 
-                              key={i} 
+                            <i
+                              key={i}
                               className={`bi ${i < review.rating ? 'bi-star-fill' : 'bi-star'} text-warning`}
                             ></i>
                           ))}
                         </div>
                       </div>
                       <p className="mb-1">{review.comment}</p>
-                      <small className="text-muted">
-                        Project: {review.project_title}
-                      </small>
+                      <small className="text-muted">Project: {review.project_title}</small>
                     </div>
                   ))}
                 </div>
@@ -208,7 +205,7 @@ const ServiceDetail = ({ user }) => {
             </div>
           </div>
         </div>
-        
+
         <div className="col-lg-4">
           <div className="card shadow-sm mb-4">
             <div className="card-header bg-primary text-white">
@@ -217,16 +214,21 @@ const ServiceDetail = ({ user }) => {
             <div className="card-body">
               <div className="text-center mb-3">
                 <i className="bi bi-person-circle text-primary" style={{ fontSize: '3rem' }}></i>
-                <h4 className="mt-2 mb-0">{provider.first_name} {provider.last_name}</h4>
+                <h4 className="mt-2 mb-0">
+                  {provider.first_name} {provider.last_name}
+                </h4>
                 <p className="text-muted">@{provider.username}</p>
-                
+
                 {provider.average_rating > 0 && (
                   <div className="mb-3">
                     <div className="d-flex justify-content-center align-items-center">
                       <span className="me-1">{provider.average_rating.toFixed(1)}</span>
                       <div>
                         {[...Array(5)].map((_, i) => (
-                          <i key={i} className={`bi ${i < Math.round(provider.average_rating) ? 'bi-star-fill' : 'bi-star'} text-warning`}></i>
+                          <i
+                            key={i}
+                            className={`bi ${i < Math.round(provider.average_rating) ? 'bi-star-fill' : 'bi-star'} text-warning`}
+                          ></i>
                         ))}
                       </div>
                       <span className="ms-1">({reviews.length})</span>
@@ -234,20 +236,20 @@ const ServiceDetail = ({ user }) => {
                   </div>
                 )}
               </div>
-              
+
               <div className="mb-3">
                 <p className="text-muted mb-1">
-                  <i className="bi bi-geo-alt me-1"></i> {provider.location || 'Location not specified'}
+                  <i className="bi bi-geo-alt me-1"></i>{' '}
+                  {provider.location || 'Location not specified'}
                 </p>
                 <p className="text-muted mb-3">
-                  <i className="bi bi-calendar me-1"></i> Member since {new Date(provider.date_joined).toLocaleDateString()}
+                  <i className="bi bi-calendar me-1"></i> Member since{' '}
+                  {new Date(provider.date_joined).toLocaleDateString()}
                 </p>
               </div>
-              
-              <p className="mb-4">
-                {provider.bio || 'No bio available'}
-              </p>
-              
+
+              <p className="mb-4">{provider.bio || 'No bio available'}</p>
+
               <div className="d-grid">
                 {!isOwnService && (
                   <button
@@ -263,7 +265,7 @@ const ServiceDetail = ({ user }) => {
               </div>
             </div>
           </div>
-          
+
           {!isOwnService && (
             <div className="collapse mb-4" id="contactForm">
               <div className="card shadow-sm">
@@ -284,25 +286,31 @@ const ServiceDetail = ({ user }) => {
                   ) : (
                     <form onSubmit={handleContactProvider}>
                       <div className="mb-3">
-                        <label htmlFor="messageText" className="form-label">Your Message</label>
+                        <label htmlFor="messageText" className="form-label">
+                          Your Message
+                        </label>
                         <textarea
                           className="form-control"
                           id="messageText"
                           rows="4"
                           placeholder="Describe your needs, ask questions about the service..."
                           value={messageText}
-                          onChange={(e) => setMessageText(e.target.value)}
+                          onChange={e => setMessageText(e.target.value)}
                           required
                         ></textarea>
                       </div>
-                      <button 
-                        type="submit" 
+                      <button
+                        type="submit"
                         className="btn btn-primary w-100"
                         disabled={messageSending}
                       >
                         {messageSending ? (
                           <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span
+                              className="spinner-border spinner-border-sm me-2"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
                             Sending...
                           </>
                         ) : (
@@ -317,7 +325,7 @@ const ServiceDetail = ({ user }) => {
               </div>
             </div>
           )}
-          
+
           <div className="d-grid">
             <Link to="/services" className="btn btn-outline-secondary">
               <i className="bi bi-arrow-left me-1"></i> Back to Services

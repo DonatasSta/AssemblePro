@@ -11,13 +11,13 @@ const Profile = ({ user, setUser }) => {
     bio: '',
     location: '',
     phone: '',
-    is_assembler: false
+    is_assembler: false,
   });
   const [errors, setErrors] = useState({});
   const [services, setServices] = useState([]);
   const [projects, setProjects] = useState([]);
   const [reviews, setReviews] = useState([]);
-  
+
   useEffect(() => {
     if (user) {
       setFormData({
@@ -26,58 +26,57 @@ const Profile = ({ user, setUser }) => {
         bio: user.bio || '',
         location: user.location || '',
         phone: user.phone || '',
-        is_assembler: user.is_assembler || false
+        is_assembler: user.is_assembler || false,
       });
-      
+
       fetchUserData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-  
+
   const fetchUserData = async () => {
     setLoading(true);
     try {
       // Fetch user's services
       const servicesResponse = await apiService.getUserServices();
       setServices(servicesResponse.data);
-      
+
       // Fetch user's projects
       const projectsResponse = await apiService.getUserProjects();
       setProjects(projectsResponse.data);
-      
+
       // Fetch reviews about the user
       const reviewsResponse = await apiService.getUserReviews(user.id);
       setReviews(reviewsResponse.data);
-      
     } catch (error) {
       console.error('Error fetching user data:', error);
     } finally {
       setLoading(false);
     }
   };
-  
-  const handleChange = (e) => {
+
+  const handleChange = e => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setFormData({
       ...formData,
-      [e.target.name]: value
+      [e.target.name]: value,
     });
   };
-  
-  const handleSubmit = async (e) => {
+
+  const handleSubmit = async e => {
     e.preventDefault();
     setErrors({});
-    
+
     try {
       // Use apiService to update profile
       const response = await apiService.updateProfile(formData);
-      
+
       // Update the user in parent component
       setUser({
         ...user,
-        ...response.data
+        ...response.data,
       });
-      
+
       setEditMode(false);
     } catch (err) {
       console.error('Error updating profile:', err);
@@ -86,7 +85,7 @@ const Profile = ({ user, setUser }) => {
       }
     }
   };
-  
+
   if (loading) {
     return (
       <div className="container py-5 text-center">
@@ -96,7 +95,7 @@ const Profile = ({ user, setUser }) => {
       </div>
     );
   }
-  
+
   return (
     <div className="container py-5">
       <div className="row">
@@ -106,7 +105,9 @@ const Profile = ({ user, setUser }) => {
               <div className="mb-3">
                 <i className="bi bi-person-circle text-primary" style={{ fontSize: '5rem' }}></i>
               </div>
-              <h3 className="mb-0">{user.first_name} {user.last_name}</h3>
+              <h3 className="mb-0">
+                {user.first_name} {user.last_name}
+              </h3>
               <p className="text-muted">@{user.username}</p>
               {user.is_assembler && (
                 <div className="mb-2">
@@ -119,7 +120,10 @@ const Profile = ({ user, setUser }) => {
                     <span className="me-1">{user.average_rating.toFixed(1)}</span>
                     <div>
                       {[...Array(5)].map((_, i) => (
-                        <i key={i} className={`bi ${i < Math.round(user.average_rating) ? 'bi-star-fill' : 'bi-star'} text-warning`}></i>
+                        <i
+                          key={i}
+                          className={`bi ${i < Math.round(user.average_rating) ? 'bi-star-fill' : 'bi-star'} text-warning`}
+                        ></i>
                       ))}
                     </div>
                     <span className="ms-1">({reviews.length} reviews)</span>
@@ -132,19 +136,14 @@ const Profile = ({ user, setUser }) => {
               <p className="text-muted mb-3">
                 <i className="bi bi-telephone me-1"></i> {user.phone || 'No phone number'}
               </p>
-              <p className="mb-4">
-                {user.bio || 'No bio available'}
-              </p>
-              <button 
-                className="btn btn-primary w-100" 
-                onClick={() => setEditMode(true)}
-              >
+              <p className="mb-4">{user.bio || 'No bio available'}</p>
+              <button className="btn btn-primary w-100" onClick={() => setEditMode(true)}>
                 <i className="bi bi-pencil me-1"></i> Edit Profile
               </button>
             </div>
           </div>
         </div>
-        
+
         <div className="col-lg-8">
           {editMode ? (
             <div className="card shadow-sm mb-4">
@@ -155,7 +154,9 @@ const Profile = ({ user, setUser }) => {
                 <form onSubmit={handleSubmit}>
                   <div className="row">
                     <div className="col-md-6 mb-3">
-                      <label htmlFor="first_name" className="form-label">First Name</label>
+                      <label htmlFor="first_name" className="form-label">
+                        First Name
+                      </label>
                       <input
                         type="text"
                         className={`form-control ${errors.first_name ? 'is-invalid' : ''}`}
@@ -169,7 +170,9 @@ const Profile = ({ user, setUser }) => {
                       )}
                     </div>
                     <div className="col-md-6 mb-3">
-                      <label htmlFor="last_name" className="form-label">Last Name</label>
+                      <label htmlFor="last_name" className="form-label">
+                        Last Name
+                      </label>
                       <input
                         type="text"
                         className={`form-control ${errors.last_name ? 'is-invalid' : ''}`}
@@ -183,9 +186,11 @@ const Profile = ({ user, setUser }) => {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="mb-3">
-                    <label htmlFor="location" className="form-label">Location</label>
+                    <label htmlFor="location" className="form-label">
+                      Location
+                    </label>
                     <input
                       type="text"
                       className={`form-control ${errors.location ? 'is-invalid' : ''}`}
@@ -194,13 +199,13 @@ const Profile = ({ user, setUser }) => {
                       value={formData.location}
                       onChange={handleChange}
                     />
-                    {errors.location && (
-                      <div className="invalid-feedback">{errors.location}</div>
-                    )}
+                    {errors.location && <div className="invalid-feedback">{errors.location}</div>}
                   </div>
-                  
+
                   <div className="mb-3">
-                    <label htmlFor="phone" className="form-label">Phone Number</label>
+                    <label htmlFor="phone" className="form-label">
+                      Phone Number
+                    </label>
                     <input
                       type="tel"
                       className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
@@ -209,11 +214,9 @@ const Profile = ({ user, setUser }) => {
                       value={formData.phone}
                       onChange={handleChange}
                     />
-                    {errors.phone && (
-                      <div className="invalid-feedback">{errors.phone}</div>
-                    )}
+                    {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
                   </div>
-                  
+
                   <div className="mb-3">
                     <div className="form-check">
                       <input
@@ -229,9 +232,11 @@ const Profile = ({ user, setUser }) => {
                       </label>
                     </div>
                   </div>
-                  
+
                   <div className="mb-3">
-                    <label htmlFor="bio" className="form-label">Bio</label>
+                    <label htmlFor="bio" className="form-label">
+                      Bio
+                    </label>
                     <textarea
                       className={`form-control ${errors.bio ? 'is-invalid' : ''}`}
                       id="bio"
@@ -240,15 +245,13 @@ const Profile = ({ user, setUser }) => {
                       value={formData.bio}
                       onChange={handleChange}
                     ></textarea>
-                    {errors.bio && (
-                      <div className="invalid-feedback">{errors.bio}</div>
-                    )}
+                    {errors.bio && <div className="invalid-feedback">{errors.bio}</div>}
                   </div>
-                  
+
                   <div className="d-flex justify-content-end gap-2">
-                    <button 
-                      type="button" 
-                      className="btn btn-secondary" 
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
                       onClick={() => setEditMode(false)}
                     >
                       Cancel
@@ -276,7 +279,7 @@ const Profile = ({ user, setUser }) => {
                     <div className="text-center py-4">
                       <i className="bi bi-tools text-muted" style={{ fontSize: '3rem' }}></i>
                       <p className="mt-2 mb-0">
-                        {user.is_assembler 
+                        {user.is_assembler
                           ? "You haven't created any services yet."
                           : "You aren't registered as an assembler. Update your profile to offer services."}
                       </p>
@@ -289,9 +292,9 @@ const Profile = ({ user, setUser }) => {
                   ) : (
                     <div className="list-group">
                       {services.map(service => (
-                        <Link 
-                          to={`/services/${service.id}`} 
-                          className="list-group-item list-group-item-action" 
+                        <Link
+                          to={`/services/${service.id}`}
+                          className="list-group-item list-group-item-action"
                           key={service.id}
                         >
                           <div className="d-flex w-100 justify-content-between">
@@ -300,8 +303,9 @@ const Profile = ({ user, setUser }) => {
                           </div>
                           <p className="mb-1 text-truncate">{service.description}</p>
                           <small className="text-muted">
-                            {service.is_available ? 'Available' : 'Not Available'} • 
-                            {service.experience_years} {service.experience_years === 1 ? 'year' : 'years'} experience
+                            {service.is_available ? 'Available' : 'Not Available'} •
+                            {service.experience_years}{' '}
+                            {service.experience_years === 1 ? 'year' : 'years'} experience
                           </small>
                         </Link>
                       ))}
@@ -309,7 +313,7 @@ const Profile = ({ user, setUser }) => {
                   )}
                 </div>
               </div>
-              
+
               <div className="card shadow-sm mb-4">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4 className="mb-0">My Projects</h4>
@@ -329,24 +333,31 @@ const Profile = ({ user, setUser }) => {
                   ) : (
                     <div className="list-group">
                       {projects.map(project => (
-                        <Link 
-                          to={`/projects/${project.id}`} 
-                          className="list-group-item list-group-item-action" 
+                        <Link
+                          to={`/projects/${project.id}`}
+                          className="list-group-item list-group-item-action"
                           key={project.id}
                         >
                           <div className="d-flex w-100 justify-content-between">
                             <h5 className="mb-1">{project.title}</h5>
-                            <span className={`badge ${
-                              project.status === 'open' ? 'bg-primary' : 
-                              project.status === 'in_progress' ? 'bg-warning' : 
-                              project.status === 'completed' ? 'bg-success' : 'bg-danger'
-                            }`}>
+                            <span
+                              className={`badge ${
+                                project.status === 'open'
+                                  ? 'bg-primary'
+                                  : project.status === 'in_progress'
+                                    ? 'bg-warning'
+                                    : project.status === 'completed'
+                                      ? 'bg-success'
+                                      : 'bg-danger'
+                              }`}
+                            >
                               {project.status.replace('_', ' ')}
                             </span>
                           </div>
                           <p className="mb-1 text-truncate">{project.description}</p>
                           <small className="text-muted">
-                            {project.furniture_type} • Budget: ${project.budget} • {project.location}
+                            {project.furniture_type} • Budget: ${project.budget} •{' '}
+                            {project.location}
                           </small>
                         </Link>
                       ))}
@@ -354,7 +365,7 @@ const Profile = ({ user, setUser }) => {
                   )}
                 </div>
               </div>
-              
+
               <div className="card shadow-sm">
                 <div className="card-header">
                   <h4 className="mb-0">Reviews</h4>
@@ -378,17 +389,15 @@ const Profile = ({ user, setUser }) => {
                             </div>
                             <div>
                               {[...Array(5)].map((_, i) => (
-                                <i 
-                                  key={i} 
+                                <i
+                                  key={i}
                                   className={`bi ${i < review.rating ? 'bi-star-fill' : 'bi-star'} text-warning`}
                                 ></i>
                               ))}
                             </div>
                           </div>
                           <p className="mb-1">{review.comment}</p>
-                          <small className="text-muted">
-                            Project: {review.project_title}
-                          </small>
+                          <small className="text-muted">Project: {review.project_title}</small>
                         </div>
                       ))}
                     </div>

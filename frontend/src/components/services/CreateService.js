@@ -11,56 +11,56 @@ const CreateService = () => {
     description: '',
     hourly_rate: '',
     experience_years: '',
-    is_available: true
+    is_available: true,
   });
-  
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.title.trim()) {
       newErrors.title = 'Title is required';
     }
-    
+
     if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     }
-    
+
     if (!formData.hourly_rate) {
       newErrors.hourly_rate = 'Hourly rate is required';
     } else if (isNaN(formData.hourly_rate) || parseFloat(formData.hourly_rate) <= 0) {
       newErrors.hourly_rate = 'Hourly rate must be a positive number';
     }
-    
+
     if (!formData.experience_years) {
       newErrors.experience_years = 'Experience years is required';
     } else if (isNaN(formData.experience_years) || parseInt(formData.experience_years) < 0) {
       newErrors.experience_years = 'Experience years must be a non-negative number';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       const token = getToken();
       const response = await axios.post(
@@ -68,16 +68,15 @@ const CreateService = () => {
         {
           ...formData,
           hourly_rate: parseFloat(formData.hourly_rate),
-          experience_years: parseInt(formData.experience_years)
+          experience_years: parseInt(formData.experience_years),
         },
         {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       // Redirect to the newly created service page
       navigate(`/services/${response.data.id}`);
-      
     } catch (err) {
       console.error('Error creating service:', err);
       if (err.response && err.response.data) {
@@ -106,10 +105,12 @@ const CreateService = () => {
                   ))}
                 </div>
               )}
-              
+
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="title" className="form-label">Service Title *</label>
+                  <label htmlFor="title" className="form-label">
+                    Service Title *
+                  </label>
                   <input
                     type="text"
                     className={`form-control ${errors.title ? 'is-invalid' : ''}`}
@@ -119,13 +120,13 @@ const CreateService = () => {
                     onChange={handleChange}
                     placeholder="e.g., IKEA Furniture Assembly Expert"
                   />
-                  {errors.title && (
-                    <div className="invalid-feedback">{errors.title}</div>
-                  )}
+                  {errors.title && <div className="invalid-feedback">{errors.title}</div>}
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="description" className="form-label">Description *</label>
+                  <label htmlFor="description" className="form-label">
+                    Description *
+                  </label>
                   <textarea
                     className={`form-control ${errors.description ? 'is-invalid' : ''}`}
                     id="description"
@@ -139,10 +140,12 @@ const CreateService = () => {
                     <div className="invalid-feedback">{errors.description}</div>
                   )}
                 </div>
-                
+
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="hourly_rate" className="form-label">Hourly Rate ($) *</label>
+                    <label htmlFor="hourly_rate" className="form-label">
+                      Hourly Rate ($) *
+                    </label>
                     <input
                       type="number"
                       className={`form-control ${errors.hourly_rate ? 'is-invalid' : ''}`}
@@ -158,9 +161,11 @@ const CreateService = () => {
                       <div className="invalid-feedback">{errors.hourly_rate}</div>
                     )}
                   </div>
-                  
+
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="experience_years" className="form-label">Years of Experience *</label>
+                    <label htmlFor="experience_years" className="form-label">
+                      Years of Experience *
+                    </label>
                     <input
                       type="number"
                       className={`form-control ${errors.experience_years ? 'is-invalid' : ''}`}
@@ -175,7 +180,7 @@ const CreateService = () => {
                     )}
                   </div>
                 </div>
-                
+
                 <div className="mb-4">
                   <div className="form-check">
                     <input
@@ -191,22 +196,24 @@ const CreateService = () => {
                     </label>
                   </div>
                 </div>
-                
+
                 <div className="d-grid gap-2">
-                  <button 
-                    type="submit" 
-                    className="btn btn-primary" 
-                    disabled={loading}
-                  >
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
                     {loading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
                         Creating...
                       </>
-                    ) : 'Create Service'}
+                    ) : (
+                      'Create Service'
+                    )}
                   </button>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => navigate('/services')}
                   >

@@ -44,59 +44,74 @@ function App() {
   // Protected route component
   const ProtectedRoute = ({ children }) => {
     if (loading) return <div className="container mt-5 text-center">Loading...</div>;
-    
+
     if (!isAuthenticated()) {
       return <Navigate to="/login" replace />;
     }
-    
+
     return children;
   };
 
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navigation user={user} setUser={setUser} />
-      
+
       <main className="flex-grow-1">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register setUser={setUser} />} />
-          
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile user={user} setUser={setUser} />
-            </ProtectedRoute>
-          } />
-          
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile user={user} setUser={setUser} />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/services" element={<ServicesList />} />
           <Route path="/services/:id" element={<ServiceDetail user={user} />} />
-          <Route path="/services/create" element={
-            <ProtectedRoute>
-              <CreateService />
-            </ProtectedRoute>
-          } />
-          
+          <Route
+            path="/services/create"
+            element={
+              <ProtectedRoute>
+                <CreateService />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/projects" element={<ProjectsList />} />
           <Route path="/projects/:id" element={<ProjectDetail user={user} />} />
-          <Route path="/projects/create" element={
-            <ProtectedRoute>
-              <CreateProject />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/messages" element={
-            <ProtectedRoute>
-              <MessagesList />
-            </ProtectedRoute>
-          } />
-          <Route path="/messages/:userId" element={
-            <ProtectedRoute>
-              <Conversation />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="/projects/create"
+            element={
+              <ProtectedRoute>
+                <CreateProject />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute>
+                <MessagesList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/messages/:userId"
+            element={
+              <ProtectedRoute>
+                <Conversation />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
-      
+
       <Footer />
     </div>
   );

@@ -14,45 +14,46 @@ const Register = ({ setUser }) => {
     is_assembler: false,
     bio: '',
     location: '',
-    phone: ''
+    phone: '',
   });
-  
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setFormData({
       ...formData,
-      [e.target.name]: value
+      [e.target.name]: value,
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setErrors({});
     setLoading(true);
-    
+
     try {
       // Use apiService to register
       const response = await apiService.register(formData);
-      
+
       // Store tokens in local storage
       setTokens(response.data);
-      
+
       // Set user in parent component
       setUser(response.data.user);
-      
+
       // Redirect to homepage
       navigate('/');
-      
     } catch (err) {
       console.error('Registration error:', err);
       if (err.response && err.response.data) {
         setErrors(err.response.data);
       } else {
-        setErrors({ non_field_errors: ['An error occurred during registration. Please try again.'] });
+        setErrors({
+          non_field_errors: ['An error occurred during registration. Please try again.'],
+        });
       }
     } finally {
       setLoading(false);
@@ -68,9 +69,11 @@ const Register = ({ setUser }) => {
               <div className="text-center mb-4">
                 <i className="bi bi-person-plus-fill text-primary" style={{ fontSize: '3rem' }}></i>
                 <h3 className="mt-2">Create an Account</h3>
-                <p className="text-muted">Join Assembleally to connect with assemblers or find projects</p>
+                <p className="text-muted">
+                  Join Assembleally to connect with assemblers or find projects
+                </p>
               </div>
-              
+
               {errors.non_field_errors && (
                 <div className="alert alert-danger">
                   {errors.non_field_errors.map((error, index) => (
@@ -78,11 +81,13 @@ const Register = ({ setUser }) => {
                   ))}
                 </div>
               )}
-              
+
               <form onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="username" className="form-label">Username*</label>
+                    <label htmlFor="username" className="form-label">
+                      Username*
+                    </label>
                     <input
                       type="text"
                       className={`form-control ${errors.username ? 'is-invalid' : ''}`}
@@ -92,13 +97,13 @@ const Register = ({ setUser }) => {
                       onChange={handleChange}
                       required
                     />
-                    {errors.username && (
-                      <div className="invalid-feedback">{errors.username}</div>
-                    )}
+                    {errors.username && <div className="invalid-feedback">{errors.username}</div>}
                   </div>
-                  
+
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="email" className="form-label">Email*</label>
+                    <label htmlFor="email" className="form-label">
+                      Email*
+                    </label>
                     <input
                       type="email"
                       className={`form-control ${errors.email ? 'is-invalid' : ''}`}
@@ -108,15 +113,15 @@ const Register = ({ setUser }) => {
                       onChange={handleChange}
                       required
                     />
-                    {errors.email && (
-                      <div className="invalid-feedback">{errors.email}</div>
-                    )}
+                    {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                   </div>
                 </div>
-                
+
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="first_name" className="form-label">First Name</label>
+                    <label htmlFor="first_name" className="form-label">
+                      First Name
+                    </label>
                     <input
                       type="text"
                       className={`form-control ${errors.first_name ? 'is-invalid' : ''}`}
@@ -129,9 +134,11 @@ const Register = ({ setUser }) => {
                       <div className="invalid-feedback">{errors.first_name}</div>
                     )}
                   </div>
-                  
+
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="last_name" className="form-label">Last Name</label>
+                    <label htmlFor="last_name" className="form-label">
+                      Last Name
+                    </label>
                     <input
                       type="text"
                       className={`form-control ${errors.last_name ? 'is-invalid' : ''}`}
@@ -140,15 +147,15 @@ const Register = ({ setUser }) => {
                       value={formData.last_name}
                       onChange={handleChange}
                     />
-                    {errors.last_name && (
-                      <div className="invalid-feedback">{errors.last_name}</div>
-                    )}
+                    {errors.last_name && <div className="invalid-feedback">{errors.last_name}</div>}
                   </div>
                 </div>
-                
+
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="password" className="form-label">Password*</label>
+                    <label htmlFor="password" className="form-label">
+                      Password*
+                    </label>
                     <input
                       type="password"
                       className={`form-control ${errors.password ? 'is-invalid' : ''}`}
@@ -158,13 +165,13 @@ const Register = ({ setUser }) => {
                       onChange={handleChange}
                       required
                     />
-                    {errors.password && (
-                      <div className="invalid-feedback">{errors.password}</div>
-                    )}
+                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                   </div>
-                  
+
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="password_confirm" className="form-label">Confirm Password*</label>
+                    <label htmlFor="password_confirm" className="form-label">
+                      Confirm Password*
+                    </label>
                     <input
                       type="password"
                       className={`form-control ${errors.password_confirm ? 'is-invalid' : ''}`}
@@ -179,9 +186,11 @@ const Register = ({ setUser }) => {
                     )}
                   </div>
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="location" className="form-label">Your Location</label>
+                  <label htmlFor="location" className="form-label">
+                    Your Location
+                  </label>
                   <input
                     type="text"
                     className={`form-control ${errors.location ? 'is-invalid' : ''}`}
@@ -191,13 +200,13 @@ const Register = ({ setUser }) => {
                     onChange={handleChange}
                     placeholder="City, State/Province"
                   />
-                  {errors.location && (
-                    <div className="invalid-feedback">{errors.location}</div>
-                  )}
+                  {errors.location && <div className="invalid-feedback">{errors.location}</div>}
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="phone" className="form-label">Phone Number</label>
+                  <label htmlFor="phone" className="form-label">
+                    Phone Number
+                  </label>
                   <input
                     type="tel"
                     className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
@@ -206,11 +215,9 @@ const Register = ({ setUser }) => {
                     value={formData.phone}
                     onChange={handleChange}
                   />
-                  {errors.phone && (
-                    <div className="invalid-feedback">{errors.phone}</div>
-                  )}
+                  {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
                 </div>
-                
+
                 <div className="mb-3">
                   <div className="form-check">
                     <input
@@ -226,10 +233,12 @@ const Register = ({ setUser }) => {
                     </label>
                   </div>
                 </div>
-                
+
                 {formData.is_assembler && (
                   <div className="mb-3">
-                    <label htmlFor="bio" className="form-label">Bio/Description of Your Services</label>
+                    <label htmlFor="bio" className="form-label">
+                      Bio/Description of Your Services
+                    </label>
                     <textarea
                       className={`form-control ${errors.bio ? 'is-invalid' : ''}`}
                       id="bio"
@@ -239,28 +248,31 @@ const Register = ({ setUser }) => {
                       onChange={handleChange}
                       placeholder="Tell us about your assembly experience and skills..."
                     ></textarea>
-                    {errors.bio && (
-                      <div className="invalid-feedback">{errors.bio}</div>
-                    )}
+                    {errors.bio && <div className="invalid-feedback">{errors.bio}</div>}
                   </div>
                 )}
-                
-                <button 
-                  type="submit" 
-                  className="btn btn-primary w-100 mb-3" 
-                  disabled={loading}
-                >
+
+                <button type="submit" className="btn btn-primary w-100 mb-3" disabled={loading}>
                   {loading ? (
                     <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
                       Creating account...
                     </>
-                  ) : 'Create Account'}
+                  ) : (
+                    'Create Account'
+                  )}
                 </button>
-                
+
                 <div className="text-center mt-3">
                   <p className="mb-0">
-                    Already have an account? <Link to="/login" className="text-primary">Login</Link>
+                    Already have an account?{' '}
+                    <Link to="/login" className="text-primary">
+                      Login
+                    </Link>
                   </p>
                 </div>
               </form>
