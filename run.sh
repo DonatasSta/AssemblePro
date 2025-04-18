@@ -3,11 +3,14 @@
 # Start the backend server
 echo "Starting Django backend server..."
 cd backend
+# Make sure database migrations are applied
+python manage.py migrate
+# Start the server
 DJANGO_SETTINGS_MODULE=assembleally.settings python manage.py runserver 0.0.0.0:8000 &
 BACKEND_PID=$!
 
-# Wait a moment for the backend to start
-sleep 2
+# Wait a bit longer for the backend to start
+sleep 5
 
 # Return to the main directory
 cd ..
