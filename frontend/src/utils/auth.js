@@ -4,23 +4,23 @@ const REFRESH_TOKEN_KEY = 'furnitureheroes_refresh_token';
 const USER_KEY = 'furnitureheroes_user';
 
 // Function to store tokens in localStorage
-export const setTokens = (tokenData) => {
+export const setTokens = tokenData => {
   if (tokenData.access) {
     localStorage.setItem(ACCESS_TOKEN_KEY, tokenData.access);
   }
-  
+
   if (tokenData.refresh) {
     localStorage.setItem(REFRESH_TOKEN_KEY, tokenData.refresh);
   }
-  
+
   if (tokenData.user) {
     localStorage.setItem(USER_KEY, JSON.stringify(tokenData.user));
   }
-  
-  console.log('Tokens stored successfully:', { 
-    access: !!tokenData.access, 
+
+  console.log('Tokens stored successfully:', {
+    access: !!tokenData.access,
     refresh: !!tokenData.refresh,
-    user: !!tokenData.user
+    user: !!tokenData.user,
   });
 };
 
@@ -58,32 +58,32 @@ export const getUser = async () => {
     console.log('getUser: Not authenticated');
     return null;
   }
-  
+
   try {
     const token = getToken();
     console.log('getUser: Token exists:', !!token);
-    
+
     // First try to get from localStorage if available
     const cachedUser = getStoredUser();
     if (cachedUser) {
       console.log('getUser: Returning cached user');
       return cachedUser;
     }
-    
+
     const apiUrl = process.env.REACT_APP_API_URL || '/api';
     console.log('getUser: Fetching from API', `${apiUrl}/profiles/me/`);
-    
+
     const response = await fetch(`${apiUrl}/profiles/me/`, {
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
-    
+
     if (!response.ok) {
       console.error('getUser: Response not OK', response.status);
       throw new Error('Failed to fetch user data');
     }
-    
+
     const userData = await response.json();
     console.log('getUser: User data received', userData);
     localStorage.setItem(USER_KEY, JSON.stringify(userData));
