@@ -41,7 +41,7 @@ print("Creating profiles...")
 Profile.objects.create(
     user=assembler1,
     bio="IKEA specialist with 5+ years of experience. I can assemble any IKEA furniture quickly and efficiently.",
-    location="New York, NY",
+    location="London, UK",
     phone="555-123-4567",
     is_assembler=True,
     average_rating=4.8
@@ -50,7 +50,7 @@ Profile.objects.create(
 Profile.objects.create(
     user=assembler2,
     bio="Furniture assembly professional specialized in complex pieces. I take pride in attention to detail.",
-    location="Boston, MA",
+    location="Manchester, UK",
     phone="555-987-6543",
     is_assembler=True,
     average_rating=4.7
@@ -59,7 +59,7 @@ Profile.objects.create(
 Profile.objects.create(
     user=customer1,
     bio="Looking for help with furniture assembly for my new apartment.",
-    location="Chicago, IL",
+    location="Birmingham, UK",
     phone="555-456-7890",
     is_assembler=False
 )
@@ -67,7 +67,7 @@ Profile.objects.create(
 Profile.objects.create(
     user=customer2,
     bio="Moving to a new home and need furniture assembly services.",
-    location="Miami, FL",
+    location="Edinburgh, UK",
     phone="555-789-0123",
     is_assembler=False
 )
@@ -117,7 +117,7 @@ project1 = ProjectListing.objects.create(
     title="Wardrobe Assembly Needed",
     description="I have a large IKEA PAX wardrobe with sliding doors that needs assembly. All materials are available, and I need it completed this weekend.",
     furniture_type="Wardrobe",
-    location="Chicago, IL",
+    location="Birmingham, UK",
     budget=150.00,
     status="open"
 )
@@ -127,7 +127,7 @@ project2 = ProjectListing.objects.create(
     title="Dining Table and Chairs",
     description="Need assembly of a dining table and 6 chairs from IKEA. The table is a MÖRBYLÅNGA and the chairs are HENRIKSDAL.",
     furniture_type="Dining Set",
-    location="Chicago, IL",
+    location="Birmingham, UK",
     budget=120.00,
     status="open"
 )
