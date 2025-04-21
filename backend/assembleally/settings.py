@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-a-development-key-that-should-be-changed-in-produc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '*']  # Add wildcard to allow Replit domains
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'furnitureheroes.co.uk', 'www.furnitureheroes.co.uk', '*']  # Include specific domains
 
 # Application definition
 INSTALLED_APPS = [
@@ -132,3 +132,11 @@ CORS_ALLOW_ALL_ORIGINS = True  # In production, specify exact origins
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Security Settings for HTTPS (enable in production)
+SECURE_SSL_REDIRECT = False  # Set to True in production to redirect HTTP to HTTPS
+SESSION_COOKIE_SECURE = False  # Set to True in production to only send cookies over HTTPS
+CSRF_COOKIE_SECURE = False  # Set to True in production to only send CSRF cookies over HTTPS
+SECURE_HSTS_SECONDS = 0  # Set to a high value (e.g., 31536000) in production for HSTS
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False  # Set to True in production to include subdomains in HSTS
+SECURE_HSTS_PRELOAD = False  # Set to True in production to include in preload lists

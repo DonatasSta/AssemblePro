@@ -124,6 +124,56 @@ This project uses GitHub Actions for continuous integration and deployment:
 3. Follow the code style guidelines
 4. Submit pull requests to the `develop` branch
 
+## Deployment
+
+### Production Environment Setup
+
+For deploying the application to production:
+
+1. Set `DEBUG = False` in `backend/assembleally/settings.py`
+2. Enable the HTTPS settings in `backend/assembleally/settings.py`:
+   ```python
+   SECURE_SSL_REDIRECT = True
+   SESSION_COOKIE_SECURE = True
+   CSRF_COOKIE_SECURE = True
+   SECURE_HSTS_SECONDS = 31536000  # 1 year
+   SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+   SECURE_HSTS_PRELOAD = True
+   ```
+3. Generate a new secret key and set it as an environment variable
+4. Configure proper CORS settings by specifying exact origins
+
+### Domain Configuration
+
+To set up the furnitureheroes.co.uk domain:
+
+1. **Domain Registration**: 
+   - Ensure the domain is properly registered with a domain registrar.
+   - Verify ownership and access to DNS management.
+
+2. **DNS Configuration**:
+   - Create an A record pointing to your server's IP address:
+     - `furnitureheroes.co.uk` → [Your Server IP]
+     - `www.furnitureheroes.co.uk` → [Your Server IP]
+   - Set appropriate TTL values (Time to Live)
+
+3. **SSL Certificate**:
+   - Obtain an SSL certificate for your domain (Let's Encrypt is a free option)
+   - Set up your web server (Nginx/Apache) to use the certificate
+   - Configure your web server to proxy requests to your Django/React application
+
+4. **Application Settings**:
+   - The domain is already added to `ALLOWED_HOSTS` in Django settings
+   - Ensure the frontend is properly built for production with `npm run build`
+   - Serve static files correctly in production
+
+5. **Testing the Domain**:
+   - Verify that both HTTP and HTTPS versions work correctly
+   - Check that redirects from HTTP to HTTPS work
+   - Test on multiple devices and browsers
+
+Remember to update the `.env` file with production values when deploying.
+
 ## License
 
 This project is proprietary software.
