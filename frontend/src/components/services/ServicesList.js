@@ -239,7 +239,7 @@ const ServicesList = () => {
                 <i className="bi bi-tools text-muted" style={{ fontSize: '3rem' }}></i>
                 <h3 className="mt-3 mb-2">No Services Found</h3>
                 <p className="text-muted mb-4">
-                  We couldn't find any assembly services matching your criteria.
+                  We couldn&apos;t find any assembly services matching your criteria.
                 </p>
                 <button className="btn btn-outline-primary" onClick={resetFilters}>
                   Clear Filters

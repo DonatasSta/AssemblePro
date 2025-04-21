@@ -358,7 +358,7 @@ const ProjectDetail = ({ user }) => {
                     <h4 className="h5 mb-3">Assembler Actions</h4>
 
                     {project.status === 'in_progress' && (
-                      <p>You're currently working on this project.</p>
+                      <p>You&apos;re currently working on this project.</p>
                     )}
 
                     {project.status === 'completed' && !showReviewForm && (

@@ -256,7 +256,7 @@ const ProjectsList = () => {
                 <i className="bi bi-clipboard-x text-muted" style={{ fontSize: '3rem' }}></i>
                 <h3 className="mt-3 mb-2">No Projects Found</h3>
                 <p className="text-muted mb-4">
-                  We couldn't find any furniture assembly projects matching your criteria.
+                  We couldn&apos;t find any furniture assembly projects matching your criteria.
                 </p>
                 <div className="d-flex justify-content-center gap-3">
                   <button className="btn btn-outline-primary" onClick={resetFilters}>

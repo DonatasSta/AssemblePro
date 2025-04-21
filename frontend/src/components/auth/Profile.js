@@ -325,7 +325,7 @@ const Profile = ({ user, setUser }) => {
                   {projects.length === 0 ? (
                     <div className="text-center py-4">
                       <i className="bi bi-clipboard text-muted" style={{ fontSize: '3rem' }}></i>
-                      <p className="mt-2 mb-0">You haven't created any projects yet.</p>
+                      <p className="mt-2 mb-0">You haven&apos;t created any projects yet.</p>
                       <Link to="/projects/create" className="btn btn-outline-primary mt-3">
                         Post Your First Project
                       </Link>
