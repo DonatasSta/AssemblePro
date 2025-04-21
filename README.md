@@ -124,6 +124,17 @@ This project uses GitHub Actions for continuous integration and deployment:
 3. Follow the code style guidelines
 4. Submit pull requests to the `develop` branch
 
+### Version Control
+
+The project includes a comprehensive `.gitignore` file configured for both Python/Django and JavaScript/React environments. This ensures that:
+
+- Environment files (`.env`) with sensitive credentials are not committed
+- Build artifacts and compiled files are excluded
+- Dependencies and package directories (`node_modules`, `venv`) are ignored
+- IDE-specific files and system artifacts aren't tracked
+
+Always review your changes before committing to ensure no sensitive information is included in the repository.
+
 ## Deployment
 
 ### Production Environment Preparation
@@ -430,6 +441,36 @@ To set up the furnitureheroes.co.uk domain:
    - For VPS: Use Certbot/Let's Encrypt as shown above
    - For Heroku: SSL is automatically managed with Heroku's paid plans
    - For Docker: Use the Certbot container as configured in docker-compose.yml
+
+### Security Best Practices
+
+When deploying to production, follow these security best practices:
+
+1. **Environment Variables**:
+   - Never commit `.env` files or hardcoded secrets to your repository
+   - Use environment variables for all sensitive information:
+     - Database credentials
+     - Secret keys
+     - API tokens
+     - Email credentials
+
+2. **Database Security**:
+   - Use strong, unique passwords for database users
+   - Restrict database access to only the application IP
+   - Regularly backup your database
+   - Enable SSL for database connections in production
+
+3. **API Security**:
+   - Set proper CORS policies to restrict origins in production
+   - Implement rate limiting for API endpoints
+   - Use HTTPS for all API calls
+   - Validate all incoming data
+
+4. **Authentication**:
+   - Store passwords using Django's password hashing
+   - Use HTTPS-only cookies
+   - Implement proper token expiration
+   - Consider adding two-factor authentication for admin access
 
 ## License
 
