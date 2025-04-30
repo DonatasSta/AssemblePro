@@ -16,8 +16,8 @@ sleep 5
 cd ..
 
 # Start the frontend server
-echo "Starting React frontend server with Vite..."
-cd frontend && VITE_ALLOW_BYPASS_DOMAIN=true npm run start &
+echo "Starting React frontend server..."
+cd frontend && PORT=5000 HOST=0.0.0.0 WDS_SOCKET_HOST=0.0.0.0 DANGEROUSLY_DISABLE_HOST_CHECK=true npm run start &
 FRONTEND_PID=$!
 
 # Function to handle script termination

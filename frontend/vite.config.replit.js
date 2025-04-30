@@ -1,27 +1,43 @@
 import { defineConfig } from 'vite';
-import { readFileSync } from 'fs';
+import react from '@vitejs/plugin-react';
 
-// This is a special Replit-specific configuration file that will be used
-// when Vite is running on Replit. It enables special settings for Replit.
-
+// Special configuration for Replit environment
 export default defineConfig({
+  plugins: [react()],
   server: {
+    // Basic server settings
+    port: 5000,
+    host: '0.0.0.0',
+    strictPort: true,
+    // Replit-specific settings
     hmr: {
-      clientPort: 443, // Important for Replit
+      // force client port to 443 so that Replit can proxy websockets
+      clientPort: 443,
     },
-    watch: {
-      usePolling: true, // Needed for file changes in Replit
+    // Maximum access configuration
+    headers: {
+      'Access-Control-Allow-Origin': '*',
     },
-    cors: true,
+    cors: {
+      origin: '*',
+    },
+    // Disable host checking entirely for Replit
+    middlewareMode: 'html',
   },
-  // These settings help Vite work better in Replit
-  clearScreen: false,
-  optimizeDeps: {
-    force: true,
+  // Handle JSX in JS files
+  esbuild: {
+    loader: 'jsx',
+    include: [
+      // Include all JS files in src
+      'src/**/*.js',
+    ],
   },
-  build: {
-    target: 'esnext',
-    sourcemap: false,
-    minify: 'terser',
+  // Explicitly set the base path
+  base: './',
+  // Specific option for Replit's hostname issue
+  experimental: {
+    renderBuiltUrl: (filename, { hostId, hostType, type }) => {
+      return filename;
+    },
   },
 });
