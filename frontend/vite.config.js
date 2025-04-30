@@ -7,16 +7,23 @@ export default defineConfig({
   server: {
     port: 5000,
     host: '0.0.0.0',
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-      },
+    hmr: {
+      clientPort: 443,
     },
   },
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom']
+  },
+  build: {
+    outDir: 'build'
+  },
+  // This is the key configuration for handling .js files with JSX
+  esbuild: {
+    loader: "jsx",
+    include: /src\/.*\.jsx?$/,
+    exclude: [],
   },
 });
