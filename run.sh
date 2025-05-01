@@ -17,7 +17,7 @@ cd ..
 
 # Start the frontend server
 echo "Starting React frontend server..."
-cd frontend && PORT=5000 HOST=0.0.0.0 WDS_SOCKET_HOST=0.0.0.0 DANGEROUSLY_DISABLE_HOST_CHECK=true npm run start &
+cd frontend && PORT=5000 HOST=0.0.0.0 WDS_SOCKET_HOST=0.0.0.0 DANGEROUSLY_DISABLE_HOST_CHECK=true npx react-scripts start &
 FRONTEND_PID=$!
 
 # Function to handle script termination
