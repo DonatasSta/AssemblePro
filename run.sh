@@ -20,6 +20,11 @@ echo "Starting React frontend server..."
 cd frontend && PORT=5000 HOST=0.0.0.0 WDS_SOCKET_HOST=0.0.0.0 DANGEROUSLY_DISABLE_HOST_CHECK=true npx react-scripts start &
 FRONTEND_PID=$!
 
+# Start the Vite + React frontend server
+echo "Starting Vite + React frontend server..."
+cd frontend && PORT=5000 HOST=0.0.0.0 npm run dev &
+FRONTEND_PID=$!
+
 # Function to handle script termination
 function cleanup {
   echo "Shutting down servers..."

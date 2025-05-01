@@ -22,7 +22,7 @@ const Login = ({ setUser }) => {
 
   // Fallback direct fetch function in case axios has issues
   const directFetch = async (url, options = {}) => {
-    const baseURL = process.env.REACT_APP_API_URL || '/api';
+    const baseURL = process.env.VITE_API_URL || '/api';
     const fullUrl = `${baseURL}${url}`;
     console.log('Direct fetch to:', fullUrl);
 
